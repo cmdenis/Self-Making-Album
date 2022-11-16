@@ -4,8 +4,9 @@ from scipy.io import wavfile
 import matplotlib.pyplot as plt
 
 
-# Sampling rate
-samplerate = 44100
+# Global data
+filename = "test.wav"
+samplerate = 44100  # Sampling rate
 length = 7 # (Seconds)
 
 
@@ -21,10 +22,10 @@ class Event:
 
         
         # Initializing attributes
-        self.pitch = pitch              # Pitch of sound
+        self.pitch = pitch              # Pitch of sound (Hz)
         self.start = start              # Time of start of sound
         self.end = end                  # Time of end of sound
-        #self.modulation = modulation    # Array with modulation data, WIP
+        #self.modulation = modulation   # Array with modulation data, WIP
 
     def sine(self):
         # Creating a sine wave
@@ -43,8 +44,9 @@ class Event:
 beep1 = Event(200, 0.5, 3)
 beep2 = Event(1000, 0.6, 3)
 beep3 = Event(2000, 0.7, 3)
-beep4 = Event(500, 4, 6)
-beep5 = Event(700, 4.5, 6)
+beep4 = Event(500, 4, 4.5)
+beep5 = Event(700, 4.5, 5)
+beep6 = Event(1000, 5, 5.5)
 
 # Making a list of events.
 # Each events corresponds to the start of a musical note (or sound)
@@ -54,7 +56,8 @@ event_list = np.array([
     beep2.sine(),
     beep3.sine(),
     beep4.sine(),
-    beep5.sine()
+    beep5.sine(),
+    beep6.sine()
 ])
 
 
@@ -66,12 +69,12 @@ signal = signal / np.max(signal) # Normalizing
 
 # Making sure signal has correct amplitude
 data = np.iinfo(np.int16).max * signal/1.1
-write("example.wav", samplerate, data.astype(np.int16))
+write(filename, samplerate, data.astype(np.int16))
 
 
 
 # Read file
-samplerate, data = wavfile.read("example.wav")
+samplerate, data = wavfile.read(filename)
 times = np.arange(len(data))/samplerate
 
 
