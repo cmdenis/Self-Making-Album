@@ -2,6 +2,9 @@ import numpy as np
 from scipy.io.wavfile import write
 from scipy.io import wavfile
 import matplotlib.pyplot as plt
+from notes import *
+
+
 
 
 # Global data
@@ -81,4 +84,4 @@ times = np.arange(len(data))/samplerate
 plt.plot(times, data/np.max(data))
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude")
-plt.show()
+#plt.show()
