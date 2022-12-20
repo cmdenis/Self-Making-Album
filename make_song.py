@@ -8,23 +8,7 @@ from effects import *
 from sound_generator import *
 
 # Script to make a random sequence based on the random note generator
-og_smp = 50
-a = np.linspace(0, 10, og_smp)
-aa = np.sin(a)
 
-
-new_smp = 10
-b = np.linspace(0, 10, new_smp)
-bb = np.interp(b, a, aa)
-
-
-plt.plot(a, aa)
-plt.plot(b, bb)
-plt.show()
-
-
-
-assert(1==0)
 
 # Global signal
 class Signal:
@@ -87,21 +71,7 @@ sequence = play_random(
 sine_synth(sequence, signal)
 
 # Add some reverb
-signal = reverb(signal, new_ir=True)
+signal = reverb(signal, 0.1, new_ir = True)
 
-
-signal.savesound()
-
-
-
-
-
-# Read file
-#samplerate, data = wavfile.read(filename)
-#times = np.arange(len(data))/samplerate
-
-
-#plt.plot(times, data/np.max(data))
-#plt.xlabel("Time (s)")
-#plt.ylabel("Amplitude")
-#plt.show()
+# Save signal
+signal.save_sound()

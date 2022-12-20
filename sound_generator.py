@@ -16,5 +16,5 @@ def sine_synth(seq, file):
         t2 = np.zeros(int((file.duration - ev.end)*file.samplerate))              # Zeroes at the end of sound
         buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
-        file += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
+        file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
 

@@ -26,6 +26,6 @@ def reverb(signal, length, dry_wet = 0.5, new_ir = False):
     else:
         kernel = np.loadtxt("impulse_responses/test_ir.txt")
 
-    signal.signal = fftconvolve(kernel, signal.signal)
+    signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]
 
     return signal
