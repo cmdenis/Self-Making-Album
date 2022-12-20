@@ -1,24 +1,81 @@
 import numpy as np
 from scipy.io.wavfile import write
 from scipy.io import wavfile
+import scipy.signal as sig
 import matplotlib.pyplot as plt
 from notes import *
 from effects import *
+from sound_generator import *
 
 # Script to make a random sequence based on the random note generator
+og_smp = 50
+a = np.linspace(0, 10, og_smp)
+aa = np.sin(a)
 
-# Global data
-filename = "random_sine.wav"
-samplerate = 44100  # Sampling rate
-length = 5 # (Seconds)
 
-signal = np.zeros(samplerate*length)
+new_smp = 10
+b = np.linspace(0, 10, new_smp)
+bb = np.interp(b, a, aa)
 
+
+plt.plot(a, aa)
+plt.plot(b, bb)
+plt.show()
+
+
+
+assert(1==0)
+
+# Global signal
+class Signal:
+    '''Class that contains a signal'''
+    def __init__(self, samplerate, duration, filename, save_samplerate = 44100):
+        
+        self.filename = filename                # Name of file
+        self.samplerate = samplerate            # Sampling rate of array
+        self.duration = duration                # (Seconds)
+        self.save_samplerate = save_samplerate  # Sample rate of saved file
+
+        self.signal = np.zeros(samplerate*duration) # Signal
+        self.length = duration * samplerate
+
+    def save_sound(self):
+
+        if self.save_samplerate == 44100: # If no extra sample rate specified, use the one from the array
+            # Normalizing and Making sure signal has correct amplitude
+            data = np.iinfo(np.int16).max * self.signal / np.max(self.signal)/10 
+            # Write signal to disk
+            write(self.filename, self.samplerate, data.astype(np.int16))
+
+        else:
+            # Interpolate data to make sampling frequencies match
+            og_smp = np.arange(self.duration*self.samplerate)
+            new_smp = np.arange(self.duration*self.save_samplerate)
+            data = np.interp(new_smp, og_smp, self.signal)
+            # Normalizing and Making sure signal has correct amplitude
+            data = np.iinfo(np.int16).max * data / np.max(data) / 10 
+
+            # Write signal to disk
+            write(self.filename, self.save_samplerate, data.astype(np.int16))
+
+        
+        
+        
+
+
+
+
+signal = Signal(
+    44100,              # Sampling rate
+    5,                  # Duration (Seconds)
+    "random_sine.wav"   # file Name
+)
 
 
 # Make major scale
 major = Scale(np.array([0, 2, 4, 5, 7, 9, 11]), 0)
 
+# Obtain sequence of notes
 sequence = play_random(
     major,
     [48, 84],
@@ -26,40 +83,16 @@ sequence = play_random(
     0.5
 )
 
-def sine_synth(seq, file):
-    # Loop over events in sequence
-    for ev in seq:
-
-        # Creating a sine wave
-        samples = (ev.end - ev.start) * samplerate
-
-        t0 = np.zeros(int(ev.start*samplerate))                       # Zeroes before start of sound
-        t1 = np.sin(2*np.pi*ev.pitch*np.arange(samples)/samplerate)   # Sound
-        t2 = np.zeros(int((length - ev.end)*samplerate))              # Zeroes at the end of sound
-        buffer = np.zeros(10)   # Buffer to make all arrays of equal length
-
-        file += np.concatenate((t0, t1, t2, buffer))[:samplerate*length]
-
-
 # Create sine sequence  
-print("Creating Sine Sequence...")
 sine_synth(sequence, signal)
 
 # Add some reverb
-signal = reverb(signal, samplerate*0.5, new_ir=True)
+signal = reverb(signal, new_ir=True)
 
 
+signal.savesound()
 
 
-
-
-
-
-
-signal =signal / np.max(signal)/10 # Normalizing
-# Making sure signal has correct amplitude
-data = np.iinfo(np.int16).max * signal
-write(filename, samplerate, data.astype(np.int16))
 
 
 
