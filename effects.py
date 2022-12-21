@@ -13,7 +13,7 @@ def spectrum(signal, window_func = np.cos):
     window = window_func(x/signal.length)
     sig_spec = np.fft.fft(signal.signal*window)
 
-    plt.plot(x, sig_spec, label = "Spectrum")
+    plt.loglog(x, sig_spec, label = "Spectrum")
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Amplitude")
     plt.legend()

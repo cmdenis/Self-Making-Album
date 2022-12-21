@@ -18,3 +18,6 @@ def sine_synth(seq, file):
 
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
 
+def white_noise(file):
+    '''Generates a white noise signal'''
+    file.signal = np.random.randn(file.length)
