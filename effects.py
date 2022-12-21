@@ -7,10 +7,10 @@ from notes import *
 
 
 
-def reverb(signal, length, dry_wet = 0.5, new_ir = False):
+def reverb(signal, length, dry_wet, new_ir = False):
     '''
     Function to add reverb to signals.
-
+    
     length: length of reverb's decay (in seconds)
     dry_wet: proportion of signal being wet and dry (1 -> wet, 0 -> dry)
     new_ir: generate a new random impulse response
@@ -20,12 +20,18 @@ def reverb(signal, length, dry_wet = 0.5, new_ir = False):
 
     if new_ir == True:
         kernel = np.exp(-x/(length*signal.samplerate))*np.random.randn(signal.length)
-        
-        kernel = fftconvolve(kernel, np.exp(-x/20000))  # Add a gaussian low pass to kernel
+        kernel = kernel/np.sum(kernel)
+         
         np.savetxt("impulse_responses/test_ir.txt", kernel)
     else:
         kernel = np.loadtxt("impulse_responses/test_ir.txt")
 
-    signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]
+    #plt.plot(kernel, label = "Kernel")
+    #plt.plot(signal.signal, label = "Original Signal")
 
+
+    signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]*dry_wet + signal.signal*(1-dry_wet)
+    #plt.plot(signal.signal, label = "Convolve Signal")
+    #plt.legend()
+    #plt.show()
     return signal
