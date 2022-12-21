@@ -6,7 +6,26 @@ import matplotlib.pyplot as plt
 from notes import *
 
 
+def spectrum(signal, window_func = np.cos):
+    '''Function that looks at the frequency spectrum of a signal.'''
+    x = np.arange(signal.length)
+
+    window = window_func(x/signal.length)
+    sig_spec = np.fft.fft(signal.signal*window)
+
+    plt.plot(x, sig_spec, label = "Spectrum")
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Amplitude")
+    plt.legend()
+    plt.show()
+
+
+
 def lowpass(signal, dry_wet = 1, filter_type = "gaussian"):
+    '''
+    Function that adds a low-pass filter to a signal.
+    '''
+
     print("Adding a "+ filter_type + " LP filter...")
 
     x = np.arange(signal.length)
@@ -22,6 +41,9 @@ def lowpass(signal, dry_wet = 1, filter_type = "gaussian"):
     signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]*dry_wet + signal.signal*(1-dry_wet)
 
     return signal
+
+
+
 
 
 def reverb(signal, length, dry_wet, new_ir = False):
