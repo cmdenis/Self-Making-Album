@@ -42,40 +42,19 @@ class Signal:
             # Write signal to disk
             write(self.filename, self.save_samplerate, data.astype(np.int16))
 
-        
-        
- 
-
-
-
-
+# Instantiate signal
 signal = Signal(
     44100,              # Sampling rate
-    5,                  # Duration (Seconds)
-    "random_sine.wav"   # file Name
+    4,                  # Duration (Seconds)
+    "white_noise_test.wav"   # file Name
 )
 
-
-# Make major scale
-major = Scale(np.array([0, 2, 4, 5, 7, 9, 11]), 0)
-
-# Obtain sequence of notes
-sequence = play_random(
-    major,
-    [48, 84],
-    8,
-    0.5
-)
-
-# Create sine sequence  
-sine_synth(sequence, signal)
-
-# Add some reverb
-signal = reverb(signal, 1, 0.5, new_ir = True)
-
-# Add a LP Filter
-signal = lowpass(signal, filter_type="gaussian")
+# Add white noise
+white_noise(signal)
 
 
-# Save signal
+# Look at spectrum
+spectrum(signal)
+
+# Save file
 signal.save_sound()
