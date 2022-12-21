@@ -74,7 +74,7 @@ sine_synth(sequence, signal)
 signal = reverb(signal, 1, 0.5, new_ir = True)
 
 # Add a LP Filter
-signal = lowpass(signal)
+signal = lowpass(signal, filter_type="gaussian")
 
 
 # Save signal
