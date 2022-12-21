@@ -9,18 +9,16 @@ from notes import *
 
 def spectrum(signal, window_func = np.cos):
     '''Function that looks at the frequency spectrum of a signal.'''
+    # Make cosine windowing
     x = np.linspace(0, np.pi, signal.length)
-
     window = window_func(x)
-    #sig_spec = np.abs(np.fft.fft(signal.signal*window))**2
+
+    # Take fft and appropriate axis
     spec_y = np.abs(sci.fft.rfft(signal.signal*window))
     spec_x = sci.fft.rfftfreq(signal.length, 1/signal.samplerate)
-
-    #spec_y = spec_y[spec_x>=0]
-    #spec_x = spec_x[spec_x>=0]
-
+    
+    # Plot result
     plt.plot(spec_x, spec_y, label = "Spectrum")
-    #plt.xscale("log")
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Amplitude")
     plt.legend()
