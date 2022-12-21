@@ -73,5 +73,9 @@ sine_synth(sequence, signal)
 # Add some reverb
 signal = reverb(signal, 1, 0.5, new_ir = True)
 
+# Add a LP Filter
+signal = lowpass(signal)
+
+
 # Save signal
 signal.save_sound()

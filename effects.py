@@ -6,6 +6,23 @@ import matplotlib.pyplot as plt
 from notes import *
 
 
+def lowpass(signal, dry_wet = 1, filter_type = "gaussian"):
+    print("Adding a "+ filter_type + " LP filter...")
+
+    x = np.arange(signal.length)
+
+    if filter_type == "gaussian":
+        cutoff = 1000
+        sigma = signal.length/(cutoff*2*np.pi)
+        kernel = np.exp(-x**2/(2*sigma**2))
+        kernel = kernel/np.sum(kernel)
+    else:
+        print("Warning: filter_type missing!")
+
+    signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]*dry_wet + signal.signal*(1-dry_wet)
+
+    return signal
+
 
 def reverb(signal, length, dry_wet, new_ir = False):
     '''
