@@ -57,11 +57,36 @@ signal = Signal(
 
 
 # Make major scale
-major = Scale(np.array([0, 2, 4, 5, 7, 9, 11]), 0)
+major = Scale(np.array([0, 2, 4, 5, 7, 9, 11]), 2)
 
 # Obtain sequence of notes
-sequence = Sequence(120, 44100)
-sequence.play_chord(major, 0, [60, 77], 0, 8)
+sequence = Sequence(150, 44100)
+chords = [
+    0,
+    5,
+    4,
+    1
+]
+roots = [
+    0, 2, 5, 9
+]
+
+bounds = [
+    [60, 77],
+    [60, 77],
+    [60, 77],
+    [60, 77]
+]
+
+times = [
+    [0, 4],
+    [4, 4],
+    [8, 4],
+    [12, 4]
+]
+
+
+sequence.play_chord_sequence(roots, chords, bounds, times)
 
 # Create sine sequence  
 sine_synth(sequence.events, signal)

@@ -43,7 +43,8 @@ class Sequence:
                 Event(selected, self.beat_time*start_beat + i*note_length, self.beat_time*(i+1)*note_length)       # Appending note on to track
             )
 
-    def play_chord(self, scale, chord_idx, bounds, chord_start, chord_duration):
+    def play_chord(self, root, chord_idx, bounds, chord_start, chord_duration):
+        scale = Scale(np.array([0]), root)
         note_choice = np.ndarray.flatten(scale.chord_scale_list[chord_idx])     # Flatten array with all possible note choices
         note_choice = note_choice[note_choice > bounds[0]]                      # Notes within range
         note_choice = note_choice[note_choice < bounds[1]]                      # Notes within range
@@ -57,6 +58,13 @@ class Sequence:
                     self.beat_time*(chord_start + chord_duration)
                     )      # Appending note on to sequence
             )
+
+
+    def play_chord_sequence(self, roots, chord_idx, bounds, chord_times):
+        nb_chords = len(roots)
+        for root, idx, bound, chord_time in zip(roots, chord_idx, bounds, chord_times):
+            self.play_chord(root, idx, bound, chord_time[0]*self.beat_time, chord_time[1]*self.beat_time)
+
 
 
 
