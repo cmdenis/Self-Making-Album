@@ -54,7 +54,16 @@ white_noise(signal)
 
 
 # Look at spectrum
-spectrum(signal)
+#spectrum(signal)
+
+
+# Apply low-pass
+#lowpass(signal)
+lp_butterworth(signal, 1000, 4, show_plot=True)
+
+
+# Look at spectrum again
+#spectrum(signal)
 
 # Save file
 signal.save_sound()

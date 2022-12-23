@@ -19,10 +19,44 @@ def spectrum(signal, window_func = np.cos):
     
     # Plot result
     plt.plot(spec_x, spec_y, label = "Spectrum")
+    plt.xscale("log")
+    plt.xlim((20, 20000))   # Audio range 20 Hz to 20 000 Hz
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Amplitude")
     plt.legend()
     plt.show()
+
+
+def butterworth(x, n):
+    return np.piecewise(x, [x<-1, x>=-1], [1, lambda x: 1/np.sqrt(1+(x+1)**(2*n))])
+
+def lp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
+    x = np.linspace(0, np.pi, signal.length)    
+    window = 1+0*np.cos(x)
+    sig_fft = sci.fft.fft(signal.signal*window)
+    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)
+
+    filt = 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))
+
+
+    sig_filt_fft = sig_fft * filt
+
+
+    if show_plot:
+        plt.plot(sig_freq, np.abs(sig_fft), label = "Unfiltered Frequencies")
+        plt.plot(sig_freq, np.abs(sig_filt_fft), label = "Filtered Frequencies")
+        plt.plot(sig_freq, filt, label = "Filter")
+        plt.xscale("log")
+        plt.show()
+
+        plt.plot()
+
+
+    signal.signal = sci.fft.ifft(sig_filt_fft).real
+
+
+
+
 
 
 
@@ -45,7 +79,7 @@ def lowpass(signal, dry_wet = 1, filter_type = "gaussian"):
 
     signal.signal = fftconvolve(kernel, signal.signal)[0:signal.length]*dry_wet + signal.signal*(1-dry_wet)
 
-    return signal
+    #return signal
 
 
 
@@ -79,3 +113,12 @@ def reverb(signal, length, dry_wet, new_ir = False):
     #plt.legend()
     #plt.show()
     return signal
+
+if __name__=="__main__":
+    x = np.linspace(-5, 5, 1000)
+    for i in range(3):
+        y = butterworth(x, i+1)
+        plt.plot(x, y, label = "Order: " + str(i+1))
+
+    plt.legend()
+    plt.show()

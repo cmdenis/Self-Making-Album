@@ -20,4 +20,4 @@ def sine_synth(seq, file):
 
 def white_noise(file):
     '''Generates a white noise signal'''
-    file.signal = np.random.randn(file.length)
+    file.signal = np.random.rand(file.length)*2 - 1
