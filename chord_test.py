@@ -89,7 +89,7 @@ times = [
 sequence.play_chord_sequence(roots, chords, bounds, times)
 
 # Create sine sequence  
-sine_synth(sequence.events, signal)
+saw_synth(sequence.events, signal)
 
 # Add some reverb
 #signal = reverb(signal, 1, 0.5, new_ir = True)
