@@ -59,7 +59,7 @@ white_noise(signal)
 
 # Apply low-pass
 #lowpass(signal)
-lp_butterworth(signal, 1000, 4, show_plot=True)
+hp_butterworth(signal, 1000, 4, show_plot=True)
 
 
 # Look at spectrum again

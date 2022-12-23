@@ -27,34 +27,53 @@ def spectrum(signal, window_func = np.cos):
     plt.show()
 
 
-def butterworth(x, n):
-    return np.piecewise(x, [x<-1, x>=-1], [1, lambda x: 1/np.sqrt(1+(x+1)**(2*n))])
-
 def lp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
-    x = np.linspace(0, np.pi, signal.length)    
-    window = 1+0*np.cos(x)
-    sig_fft = sci.fft.fft(signal.signal*window)
-    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)
 
-    filt = 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))
+    sig_fft = sci.fft.fft(signal.signal)    # FFT of signal
+    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)  # Frequencies of fft
 
-
-    sig_filt_fft = sig_fft * filt
+    filt = 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))  # Butterworth filter
 
 
+    sig_filt_fft = sig_fft * filt   # Filtered frequencies
+
+    # Plot power spectrum if boolean is true
     if show_plot:
-        plt.plot(sig_freq, np.abs(sig_fft), label = "Unfiltered Frequencies")
-        plt.plot(sig_freq, np.abs(sig_filt_fft), label = "Filtered Frequencies")
+        plt.plot(sig_freq, np.abs(sig_fft)**2, label = "Unfiltered Frequencies")
+        plt.plot(sig_freq, np.abs(sig_filt_fft)**2, label = "Filtered Frequencies")
         plt.plot(sig_freq, filt, label = "Filter")
         plt.xscale("log")
         plt.show()
 
-        plt.plot()
+        plt.plot(sci.fft.ifft(sig_filt_fft).real)
+        plt.show()
+
+    signal.signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal.signal*(1-dry_wet) # Inverse fft
 
 
-    signal.signal = sci.fft.ifft(sig_filt_fft).real
+def hp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
+
+    sig_fft = sci.fft.fft(signal.signal)    # FFT of signal
+    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)  # Frequencies of fft
+
+    filt = 1- 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))  # Butterworth filter
 
 
+    sig_filt_fft = sig_fft * filt   # Filtered frequencies
+
+    # Plot power spectrum if boolean is true
+    if show_plot:
+        plt.plot(sig_freq, np.abs(sig_fft)**2, label = "Unfiltered Frequencies")
+        plt.plot(sig_freq, np.abs(sig_filt_fft)**2, label = "Filtered Frequencies")
+        plt.plot(sig_freq, filt, label = "Filter")
+        plt.xscale("log")
+        plt.show()
+
+        plt.plot(sci.fft.ifft(sig_filt_fft).real)
+        plt.plot(signal.signal)
+        plt.show()
+
+    signal.signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal.signal*(1-dry_wet) # Inverse fft
 
 
 
