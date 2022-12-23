@@ -20,8 +20,48 @@ class Event:
         self.end = end                              # Time of end of sound
         #self.modulation = modulation               # Array with modulation data, WIP
 
+class Sequence:
+    '''Class for the sequence of events'''
+    def __init__(self, bpm, sr):
+        self.bpm = bpm              # Beats per mins
+        self.sr = sr                # Sample rate
+        self.beat_time = 60/bpm     # Duration of a whole note (in seconds)
+
+        self.events = []
+
+    def play_random(self, scale, start_beat, bounds, nb, note_length = 1):
+        '''Function that just plays random notes (each as a whole note) in a scale, with a certain range.'''
+        np.random.seed(514)
+
+        for i in range(nb):
+            note_choice = np.ndarray.flatten(scale.octaves)                 # Flatten array with all possible note choices
+            note_choice = note_choice[note_choice > bounds[0]]              # Notes within range
+            note_choice = note_choice[note_choice < bounds[1]]              # Notes within range
+            selected = np.random.choice(note_choice)                        # Random selection of notes within range
+
+            self.events.append(
+                Event(selected, self.beat_time*start_beat + i*note_length, self.beat_time*(i+1)*note_length)       # Appending note on to track
+            )
+
+    def play_chord(self, scale, chord_idx, bounds, chord_start, chord_duration):
+        note_choice = np.ndarray.flatten(scale.chord_scale_list[chord_idx])     # Flatten array with all possible note choices
+        note_choice = note_choice[note_choice > bounds[0]]                      # Notes within range
+        note_choice = note_choice[note_choice < bounds[1]]                      # Notes within range
+
+        # Cycle through notes in chord and adding events
+        for note in note_choice:
+            self.events.append(
+                Event(
+                    note, 
+                    self.beat_time*chord_start, 
+                    self.beat_time*(chord_start + chord_duration)
+                    )      # Appending note on to sequence
+            )
+
+
+
 class Scale:
-    '''Class to create a scale that can then conveniently bbe used to make music.'''
+    '''Class to create a scale that can then conveniently be used to make music.'''
     def __init__(self, intervals, root):
 
         # For the intervals:
@@ -38,16 +78,91 @@ class Scale:
         if np.max(intervals) > 11:
             print("Warning: Interval list is larger than octave. Notes above octave will get converted to fit within octave.")
 
+
         # Makes notes fit in an octave and finds non-repeated notes
         self.intervals = np.unique(np.mod(intervals, 12))
         self.nb_notes = len(self.intervals)
 
-        # Creates array of octaves that each contain the notes from the scale
-        self.octaves = np.empty([10, self.nb_notes])
-        for idx, i in enumerate(self.octaves):
-            self.octaves[idx] = self.intervals + idx*12
+        # Makes set of midi notes based on given intervals
+        def make_octaves(notes):
+            # Creates array of octaves that each contain the notes from the scale
+            octaves = np.empty([10, len(notes)])
+            for idx, i in enumerate(octaves):
+                octaves[idx] = notes + idx*12
+            return octaves
+        self.octaves = make_octaves(self.intervals)
 
         self.octaves += root
+
+        self.root = root
+
+
+        # Create chords
+        self.C = np.array([0, 4, 7])                # C
+        self.Cm = np.array([0, 3, 7])               # Cm
+        self.C7 = np.array([0, 4, 7, 10])           # C7
+        self.Cm7 = np.array([0, 3, 7, 10])          # Cm7
+        self.Cm7b5 = np.array([0, 3, 6, 10])        # Cm7b5
+        self.Cmaj7 = np.array([0, 4, 7, 11])        # Cmaj7
+        self.Csus4 = np.array([0, 5, 7])            # Csus4
+        self.Csus2 = np.array([0, 2, 7])            # Csus2
+        self.Cadd2 = np.array([0, 2, 4, 7])         # Cadd9/Cadd2
+        self.Cdim = np.array([0, 3, 6])             # Cdim
+        self.Cdim7 = np.array([0, 2, 7, 9])         # Cdim7
+        self.CmM7 = np.array([0, 2, 7, 11])         # CmM7
+        self.Caug = np.array([0, 4, 8])             # Caug
+        self.Caug7 = np.array([0, 4, 8, 10])        # Caug7
+        self.C6 = np.array([0, 4, 7, 9])            # C6
+        self.Cm6 = np.array([0, 3, 7, 9])           # Cm6
+        self.C6_9 = np.array([0, 2, 4, 7, 9])       # C6/9
+        self.C5 = np.array([0, 5])                  # C5
+        self.C9 = np.array([0, 2, 4, 7, 10])        # C9
+        self.Cm9 = np.array([0, 2, 3, 7, 10])       # Cm9
+        self.Cmaj9 = np.array([0, 2, 4, 7, 11])     # Cmaj9
+        self.C11 = np.array([0, 2, 4, 5, 7, 10])    # C11
+        self.Cm11 = np.array([0, 2, 3, 5, 7, 10])   # Cm11
+
+        # List of chords
+        self.chord_list = [
+            self.C, 
+            self.Cm, 
+            self.C7, 
+            self.Cm7,
+            self.Cm7b5,
+            self.Cmaj7,
+            self.Csus4,
+            self.Csus2,
+            self.Cadd2,
+            self.Cdim,
+            self.Cdim7,
+            self.CmM7,
+            self.Caug,
+            self.Caug7,
+            self.C6,
+            self.Cm6,
+            self.C6_9,
+            self.C5,
+            self.C9,
+            self.Cm9,
+            self.Cmaj9,
+            self.C11,
+            self.Cm11
+        ]
+
+        # Make midi notes list for all chords
+        self.chord_scale_list = []
+        for i in self.chord_list:
+            self.chord_scale_list.append(make_octaves(i) + self.root)
+            
+    
+
+
+
+
+    def transpose(self, shift):
+        # Re-instantiate scale object
+        self = Scale(self.intervals, self.root + np.mod(shift, 12))
+
 
 def play_random(scale, bounds, nb, dt):
     '''Function that just plays random notes (each as a whole note) in a scale, with a certain range.'''

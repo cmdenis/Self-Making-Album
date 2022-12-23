@@ -42,19 +42,36 @@ class Signal:
             # Write signal to disk
             write(self.filename, self.save_samplerate, data.astype(np.int16))
 
-# Instantiate signal
+        
+        
+ 
+
+
+
+
 signal = Signal(
     44100,              # Sampling rate
-    4,                  # Duration (Seconds)
-    "white_noise_test.wav"   # file Name
+    5,                  # Duration (Seconds)
+    "test_chord.wav"   # file Name
 )
 
-# Add white noise
-white_noise(signal)
+
+# Make major scale
+major = Scale(np.array([0, 2, 4, 5, 7, 9, 11]), 0)
+
+# Obtain sequence of notes
+sequence = Sequence(120, 44100)
+sequence.play_chord(major, 0, [60, 77], 0, 8)
+
+# Create sine sequence  
+sine_synth(sequence.events, signal)
+
+# Add some reverb
+#signal = reverb(signal, 1, 0.5, new_ir = True)
+
+# Add a LP Filter
+#signal = lowpass(signal, filter_type="gaussian")
 
 
-# Apply low-pass
-hp_butterworth(signal, 100, 4, show_plot=True)
-
-# Save file
+# Save signal
 signal.save_sound()
