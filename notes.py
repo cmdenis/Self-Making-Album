@@ -31,7 +31,6 @@ class Sequence:
 
     def play_random(self, scale, start_beat, bounds, nb, note_length = 1):
         '''Function that just plays random notes (each as a whole note) in a scale, with a certain range.'''
-        np.random.seed(514)
 
         for i in range(nb):
             note_choice = np.ndarray.flatten(scale.octaves)                 # Flatten array with all possible note choices
@@ -174,7 +173,6 @@ class Scale:
 
 def play_random(scale, bounds, nb, dt):
     '''Function that just plays random notes (each as a whole note) in a scale, with a certain range.'''
-    np.random.seed(514)
 
     track = []
 

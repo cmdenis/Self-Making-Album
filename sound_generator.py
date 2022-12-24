@@ -1,13 +1,12 @@
 import numpy as np
 from scipy.io.wavfile import write
-from scipy.io import wavfile
 import scipy as sci
 import matplotlib.pyplot as plt
 from effects import *
 
 class Signal:
     '''Class that contains a signal'''
-    def __init__(self, samplerate, duration, filename, save_samplerate = 44100):
+    def __init__(self, samplerate, duration, filename, save_samplerate = 100100):
         
         self.filename = filename                # Name of file
         self.samplerate = samplerate            # Sampling rate of array
@@ -19,23 +18,23 @@ class Signal:
 
     def save_sound(self):
 
-        if self.save_samplerate == 44100: # If no extra sample rate specified, use the one from the array
-            # Normalizing and Making sure signal has correct amplitude
-            data = np.iinfo(np.int16).max * self.signal / np.max(self.signal)/10 
-            # Write signal to disk
-            write(self.filename, self.samplerate, data.astype(np.int16))
+        
+        # Interpolate data to make sampling frequencies match
+        print("Original signal is at", self.samplerate, "Hz sampling rate.")
+        print("Saving signal at", self.save_samplerate, "Hz sampling rate.")
+        og_smp = np.arange(self.duration*self.samplerate)
+        new_smp = np.linspace(0, self.duration*self.samplerate, self.duration*self.save_samplerate)
+        #plt.plot(self.signal[0:10])
+        data = np.interp(new_smp, og_smp, self.signal)
+        #plt.plot(data[0:10])
+        #plt.show()
+        # Normalizing and Making sure signal has correct amplitude
+        data = np.iinfo(np.int16).max * data / np.max(data) / 10 
 
-        else:
-            # Interpolate data to make sampling frequencies match
-            og_smp = np.arange(self.duration*self.samplerate)
-            new_smp = np.arange(self.duration*self.save_samplerate)
-            data = np.interp(new_smp, og_smp, self.signal)
-            # Normalizing and Making sure signal has correct amplitude
-            data = np.iinfo(np.int16).max * data / np.max(data) / 10 
+        # Write signal to disk
+        write(self.filename, self.save_samplerate, data.astype(np.int16))
 
-            # Write signal to disk
-            write(self.filename, self.save_samplerate, data.astype(np.int16))
-
+        
 
 def sine_synth(seq, file):
     # Loop over events in sequence
@@ -78,9 +77,6 @@ def ADSR(x, a, d, s, r, show_plot = False):
             [pre_rel_x < a, np.logical_and(a <= pre_rel_x, pre_rel_x < a+d), a+d<=pre_rel_x],
             [attack, decay, sustain]
         )
-
-        plt.plot(pre_rel)
-        plt.show()
 
         release = x[-1]*pre_rel[-1]/r - pre_rel[-1]/r*x[x[-1] - r <= x]
 
@@ -143,7 +139,7 @@ def substractive_synth_1(seq, file, cutoff, amp_adsr, waveshape_1, waveshape_2, 
         
         t1 = wave_1(2*np.pi*(ev.pitch+pitch_1)*samples)     # Create waveform 1
         t1 += wave_2(2*np.pi*(ev.pitch+pitch_2)*samples)    # Add waveform 2
-        lp_butterworth(t1, file.samplerate, cutoff, 2)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
+        t1 = lp_butterworth(t1, file.samplerate, cutoff, 2)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
         t1 = t1*ADSR(samples, amp_A, amp_D, amp_S, amp_R)   # Apply envelope
     
 
