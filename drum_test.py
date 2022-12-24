@@ -11,7 +11,7 @@ from sound_generator import *
 
 signal = Signal(
     44100,              # Sampling rate
-    10,                  # Duration (Seconds)
+    11,                  # Duration (Seconds)
     "audio_tests/drum_test.wav"   # file Name
 )
 
