@@ -60,9 +60,19 @@ class Sequence:
 
 
     def play_chord_sequence(self, roots, chord_idx, bounds, chord_times):
-        nb_chords = len(roots)
         for root, idx, bound, chord_time in zip(roots, chord_idx, bounds, chord_times):
             self.play_chord(root, idx, bound, chord_time[0]*self.beat_time, chord_time[1]*self.beat_time)
+    
+
+    def play_metronome(self, start_time, end_time, note_length, midi_note = 0):
+        for shot in np.linspace(start_time, end_time, note_length)*self.beat_time:
+            self.events.append(
+                Event(
+                    midi_note,
+                    shot,
+                    shot+0.01
+                )
+            )
 
 
 

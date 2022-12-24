@@ -6,7 +6,7 @@ from effects import *
 
 class Signal:
     '''Class that contains a signal'''
-    def __init__(self, samplerate, duration, filename, save_samplerate = 100100):
+    def __init__(self, samplerate, duration, filename, save_samplerate = 44100):
         
         self.filename = filename                # Name of file
         self.samplerate = samplerate            # Sampling rate of array
@@ -33,8 +33,6 @@ class Signal:
 
         # Write signal to disk
         write(self.filename, self.save_samplerate, data.astype(np.int16))
-
-        
 
 def sine_synth(seq, file):
     # Loop over events in sequence
@@ -93,10 +91,6 @@ def ADSR(x, a, d, s, r, show_plot = False):
 
     return np.concatenate((attack, decay, sustain, release))
 
-
-
-
-
 def substractive_synth_1(seq, file, cutoff, amp_adsr, waveshape_1, waveshape_2, pitch_1 = 0, pitch_2 = 0):
     print("Using 'substractive_synth_1' generator...")
 
@@ -148,6 +142,23 @@ def substractive_synth_1(seq, file, cutoff, amp_adsr, waveshape_1, waveshape_2, 
 
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
         
+
+def bass_drum(file, seq):
+    print("Making a bass drum line...")
+
+    # Making the bass drum sample
+    length = 2
+    pitch = 30
+    pitch_mod = 6
+    pitch_decay = 0.1
+    amp_decay = 2
+
+    x = np.arange(file.length)/file.samplerate
+
+    file.signal = np.sin(2*np.pi*((1-pitch_mod)*pitch_decay*np.exp(-x/pitch_decay) - (1-pitch_mod)*pitch_decay  +x)*pitch)*np.exp(-x/amp_decay)
+
+    #file.signal = np.sin(2*np.pi*( pitch_mod*np.log(x/pitch_decay + 1) +   x*pitch))*np.exp(-x/amp_decay)
+
 
 
 def white_noise(file):
