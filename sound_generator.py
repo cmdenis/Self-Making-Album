@@ -153,11 +153,19 @@ def bass_drum(file, seq):
     pitch_decay = 0.1
     amp_decay = 2
 
-    x = np.arange(file.length)/file.samplerate
+    x = np.arange(length*file.samplerate)/file.samplerate
 
-    file.signal = np.sin(2*np.pi*((1-pitch_mod)*pitch_decay*np.exp(-x/pitch_decay) - (1-pitch_mod)*pitch_decay  +x)*pitch)*np.exp(-x/amp_decay)
+    # Loop over events in sequence
+    for ev in seq.events:
+        # Creating a sine wave
 
-    #file.signal = np.sin(2*np.pi*( pitch_mod*np.log(x/pitch_decay + 1) +   x*pitch))*np.exp(-x/amp_decay)
+        t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
+        t1 = np.sin(2*np.pi*((1-pitch_mod)*pitch_decay*np.exp(-x/pitch_decay) - (1-pitch_mod)*pitch_decay +x)*pitch)*np.exp(-x/amp_decay)   # Sound
+        t2 = np.zeros(int((file.duration - (ev.start+length))*file.samplerate))              # Zeroes at the end of sound
+        buffer = np.zeros(10)   # Buffer to make all arrays of equal length
+
+        file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
+
 
 
 

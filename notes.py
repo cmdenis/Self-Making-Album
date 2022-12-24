@@ -65,7 +65,14 @@ class Sequence:
     
 
     def play_metronome(self, start_time, end_time, note_length, midi_note = 0):
-        for shot in np.linspace(start_time, end_time, note_length)*self.beat_time:
+        '''Plays a single note repeatedly with interval corresponding to note_length. Starts sequence at 'start_time' and ends at 'end_time'.'''
+        print(start_time)
+        print(end_time)
+        print(note_length)
+        
+        print(np.arange(start_time, end_time, note_length))
+        for shot in np.arange(start_time, end_time, note_length)*self.beat_time:
+            print(shot)
             self.events.append(
                 Event(
                     midi_note,

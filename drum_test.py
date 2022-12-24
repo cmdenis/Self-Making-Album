@@ -11,11 +11,19 @@ from sound_generator import *
 
 signal = Signal(
     44100,              # Sampling rate
-    3,                  # Duration (Seconds)
+    10,                  # Duration (Seconds)
     "audio_tests/drum_test.wav"   # file Name
 )
 
-bass_drum(signal, None)
+sequence = Sequence(120, 44100)
+
+sequence.play_metronome(
+    0,  # Note start
+    16, # Note end
+    1   # Note length
+)
+
+bass_drum(signal, sequence)
 
 
 # Save signal
