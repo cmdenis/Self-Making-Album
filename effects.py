@@ -27,10 +27,10 @@ def spectrum(signal, window_func = np.cos):
     plt.show()
 
 
-def lp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
+def lp_butterworth(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = False):
 
-    sig_fft = sci.fft.fft(signal.signal)    # FFT of signal
-    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)  # Frequencies of fft
+    sig_fft = sci.fft.fft(signal)    # FFT of signal
+    sig_freq = sci.fft.fftfreq(len(signal), 1/samplerate)  # Frequencies of fft
 
     filt = 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))  # Butterworth filter
 
@@ -48,7 +48,7 @@ def lp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
         plt.plot(sci.fft.ifft(sig_filt_fft).real)
         plt.show()
 
-    signal.signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal.signal*(1-dry_wet) # Inverse fft
+    signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal*(1-dry_wet) # Inverse fft
 
 
 def hp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):

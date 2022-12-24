@@ -44,15 +44,12 @@ class Signal:
 
         
         
- 
-
-
 
 
 signal = Signal(
     44100,              # Sampling rate
     5,                  # Duration (Seconds)
-    "random_sine.wav"   # file Name
+    "audio_tests/random_sine.wav"   # file Name
 )
 
 
@@ -68,13 +65,13 @@ sequence = play_random(
 )
 
 # Create sine sequence  
-sine_synth(sequence, signal)
+substractive_synth_1(sequence, signal, 1000, [0.5, 0.5, 0.5, 0.5], 'saw', 'saw', pitch_1 = 2, pitch_2 = -2)
 
 # Add some reverb
-signal = reverb(signal, 1, 0.5, new_ir = True)
+#signal = reverb(signal, 1, 0.5, new_ir = True)
 
 # Add a LP Filter
-signal = lowpass(signal, filter_type="gaussian")
+#signal = lowpass(signal, filter_type="gaussian")
 
 
 # Save signal
