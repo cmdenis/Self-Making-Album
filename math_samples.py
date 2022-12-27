@@ -48,8 +48,14 @@ class SampleFunction:
             # p[0]: Noise decay
             # p[1]: AM mod
             # p[2]: AM frequency
+
+            def hh(x, p):
+                sound = np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2) + np.sin(2*np.pi*x*2000)*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)*np.exp(-x/0.01)*0.2
+                filt = sci.signal.butter(3, 500, btype="highpass", fs = 44100, output="sos")
+                return sci.signal.sosfilt(filt, sound)
             
-            self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
+            #self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
+            self.func = hh
             self.length = 1
 
 
