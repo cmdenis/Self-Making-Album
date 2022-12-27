@@ -23,8 +23,15 @@ sequence.play_metronome(
     1   # Note length
 )
 
-bass_drum(signal, sequence)
-
+bass_drum(
+    signal,
+    sequence,
+    1,  # Length (s)
+    40, # Pitch (Hz)
+    6,  # Pitch mod
+    0.1,# Pitch decay (s)
+    0.2   # Amp decay (s)
+)
 
 # Save signal
 signal.save_sound()

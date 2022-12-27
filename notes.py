@@ -81,6 +81,20 @@ class Sequence:
                 )
             )
 
+    def sort_sequence(self, sort_pitch_mode = 'lower_last'):
+        '''Function to sort the elements of the sequence temporally. Can be useful for choked percussions.'''
+        if sort_pitch_mode == 'lower_last':
+            self.events(key = lambda x: x.midi_note, reverse = True)
+            self.events(key = lambda x: x.start, reverse = True)
+        elif sort_pitch_mode == 'higher_last':
+            self.events(key = lambda x: x.midi_note)
+            self.events(key = lambda x: x.start, reverse = True)
+        else:
+            self.events(key = lambda x: x.start, reverse = True)
+
+
+        
+
 
 
 
