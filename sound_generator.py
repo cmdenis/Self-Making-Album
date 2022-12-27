@@ -144,29 +144,12 @@ def substractive_synth_1(seq, file, cutoff, amp_adsr, waveshape_1, waveshape_2, 
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
         
 
-def play_bass_drum(file, seq, length, pitch, pitch_mod, pitch_decay, amp_decay):
-    print("Making a bass drum...")
-
-    # Making the bass drum sample
-    
-
-    x = np.arange(length*file.samplerate)/file.samplerate
-
-    # Loop over events in sequence
-    for ev in seq.events:
-        # Creating a sine wave
-
-        t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
-        t1 = np.sin(2*np.pi*((1-pitch_mod)*pitch_decay*np.exp(-x/pitch_decay) - (1-pitch_mod)*pitch_decay +x)*pitch)*np.exp(-x/amp_decay)   # Sound
-        t2 = np.zeros(int((file.duration - (ev.start+length))*file.samplerate))              # Zeroes at the end of sound
-        buffer = np.zeros(10)   # Buffer to make all arrays of equal length
-
-        file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
-
 
 
 def play_function(file, seq, instrument_func, parameters, choke = False):
     print("Making a '" + instrument_func.name + "'...")
+
+    print(instrument_func.func)
 
     # Making the sample
     

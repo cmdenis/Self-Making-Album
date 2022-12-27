@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from notes import *
 from effects import *
 from sound_generator import *
+from math_samples import *
 
 
 
@@ -23,12 +24,12 @@ sequence.play_metronome(
     1   # Note length
 )
 
-bd = Sample_function(bass_drum, 1)
+bd = SampleFunction("bass_drum", 2)
 
 play_function(
     signal,
     sequence,
-    bass_drum,
+    bd,
     [
         200, # Pitch (Hz)
         5,  # Pitch mod

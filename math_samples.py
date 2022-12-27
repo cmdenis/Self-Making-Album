@@ -7,26 +7,27 @@ import scipy as sci
 import matplotlib.pyplot as plt
 from effects import *
 
-class Sample_function:
+class SampleFunction:
     def __init__(self, func_name, length, func = None):
         '''Initializes object. If func is left blank, then it will be replaced by the preset samples from 'make_sample'.'''
 
-        self.name = _func_name      # Name of instrument
+        self.name = func_name      # Name of instrument
         self.length = length        # Length of sample (in seconds)
 
-        if self.func == None:
+        # Checks if user inputted custom function
+        if func == None:
             self.make_sample()
         else:
             self.func = func        # Function for the sample, first argument is time and the second is parameters
 
     def make_sample(self):
         '''Method to create sample based on 'func_name'.'''
-
-        if func_name == "bass_drum":
-            self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3]),
-            self.length = 2
         
-        elif func_name == "snare_drum":
+        if self.name == "bass_drum":
+            self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
+            self.length = 2
+            
+        elif self.name == "snare_drum":
             self.func = 0
             self.length = 1
     
