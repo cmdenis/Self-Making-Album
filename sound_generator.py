@@ -3,6 +3,7 @@ from scipy.io.wavfile import write
 import scipy as sci
 import matplotlib.pyplot as plt
 from effects import *
+from math_samples import *
 
 class Signal:
     '''Class that contains a signal'''
@@ -162,24 +163,6 @@ def play_bass_drum(file, seq, length, pitch, pitch_mod, pitch_decay, amp_decay):
 
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
 
-class Sample_function:
-    def __init__(self, func, length, name = "Sample"):
-        self.func = func    # Function for the sample, first argument is time and the second is parameters
-        self.name = name    # Name of instrument
-        self.length = length# Length of sample (in seconds)
-
-    
-
-bass_drum = Sample_function(
-    lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3]), 
-    2,   # Duration in seconds
-    "Bass Drum"
-)
-# Parameters for bass_drum
-# p[0]: Pitch (Hz)
-# p[1]: Pitch mod
-# p[2]: Pitch decay (s)
-# p[3]: Amp decay (s)
 
 
 def play_function(file, seq, instrument_func, parameters, choke = False):
