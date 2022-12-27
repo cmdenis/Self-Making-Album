@@ -162,22 +162,24 @@ def play_bass_drum(file, seq, length, pitch, pitch_mod, pitch_decay, amp_decay):
 
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
 
-class sample_function:
+class Sample_function:
     def __init__(self, func, length, name = "Sample"):
         self.func = func    # Function for the sample, first argument is time and the second is parameters
         self.name = name    # Name of instrument
         self.length = length# Length of sample (in seconds)
 
     
-def bass_drum(x, p):
-    # p[0]: Pitch (Hz)
-    # p[1]: Pitch mod
-    # p[2]: Pitch decay (s)
-    # p[3]: Amp decay (s)
-    return np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
 
-sample_function(bass_drum, 1, name="Bass Drum")
-
+bass_drum = Sample_function(
+    lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3]), 
+    2,   # Duration in seconds
+    "Bass Drum"
+)
+# Parameters for bass_drum
+# p[0]: Pitch (Hz)
+# p[1]: Pitch mod
+# p[2]: Pitch decay (s)
+# p[3]: Amp decay (s)
 
 
 def play_function(file, seq, instrument_func, parameters, choke = False):
@@ -188,18 +190,23 @@ def play_function(file, seq, instrument_func, parameters, choke = False):
 
     x = np.arange(instrument_func.length*file.samplerate)/file.samplerate
 
+    if choke == True:
+        seq.sort_sequence()
+
     # Loop over events in sequence
     for ev in seq.events:
         # Creating a sine wave
 
         t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
         t1 = instrument_func.func(x, parameters) # Sound
-        t2 = np.zeros(int((file.duration - (ev.start+length))*file.samplerate))              # Zeroes at the end of sound
+        t2 = np.zeros(int((file.duration - (ev.start+instrument_func.length))*file.samplerate))              # Zeroes at the end of sound
         buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
         # If choke is true then remove other sounds when new sound starts playing.
         if choke==True:
-            file.signal[int(ev.start*file.samplerate):int((file.duration - (ev.start+length))*file.samplerate)] = 0
+            print("Start of sample:", ev.start*file.samplerate)
+            print("End of sample:", ((ev.start+instrument_func.length))*file.samplerate)
+            file.signal[int(ev.start*file.samplerate):int(((ev.start+instrument_func.length))*file.samplerate)] = 0
 
         # Add sound to signal
         file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]

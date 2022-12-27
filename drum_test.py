@@ -23,15 +23,21 @@ sequence.play_metronome(
     1   # Note length
 )
 
-bass_drum(
+bd = Sample_function(bass_drum, 1)
+
+play_function(
     signal,
     sequence,
-    1,  # Length (s)
-    40, # Pitch (Hz)
-    6,  # Pitch mod
-    0.1,# Pitch decay (s)
-    0.2   # Amp decay (s)
+    bass_drum,
+    [
+        200, # Pitch (Hz)
+        5,  # Pitch mod
+        0.1,# Pitch decay (s)
+        1   # Amp decay (s)
+    ],
+    choke = True
 )
+
 
 # Save signal
 signal.save_sound()
