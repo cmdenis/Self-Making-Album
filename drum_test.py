@@ -8,6 +8,7 @@ from effects import *
 from sound_generator import *
 from math_samples import *
 
+np.random.seed(514)
 
 
 signal = Signal(
@@ -15,6 +16,8 @@ signal = Signal(
     11,                  # Duration (Seconds)
     "audio_tests/drum_test.wav"   # file Name
 )
+
+# HH pattern
 
 sequence = Sequence(120, 44100)
 
@@ -24,18 +27,51 @@ sequence.play_metronome(
     1   # Note length
 )
 
+# Possibilities:
+# bass_drum
+# snare_drum
+
+sd = SampleFunction("snare_drum", 2)
+p_sd = [
+    200,    # p[0]: Pitch (Hz)
+    1.1,    # p[1]: Pitch mod
+    0.1,    # p[2]: Pitch decay (s)
+    0.1,    # p[3]: Amp decay (s)
+    0.1,    # p[4]: noise decay
+    0.5     # p[5]: noise/tone ratio
+]
+
 bd = SampleFunction("bass_drum", 2)
+
+hh = SampleFunction("hi_hat", 2)
+p_hh = [
+    0.01,   # p[0]: Noise decay
+    1,    # p[1]: AM mod
+    500,    # p[2]: AM frequency
+]
+
+'''
+play_function(
+    signal,
+    sequence,
+    sd,
+    [
+        0.2,    # p[0]: Noise Decay
+        400,    # p[1]: Tone pitch
+        1,      # p[2]: Pitch decay (s)
+        0.1,    # p[3]: Pitch Amp decay (s)
+        0.1,    # p[4]: pitch mod
+        0.5     # p[5]: noise/tone ratio
+    ],
+    choke = True
+)'''
+
 
 play_function(
     signal,
     sequence,
-    bd,
-    [
-        200, # Pitch (Hz)
-        5,  # Pitch mod
-        0.1,# Pitch decay (s)
-        1   # Amp decay (s)
-    ],
+    hh,
+    p_hh,
     choke = True
 )
 

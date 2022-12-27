@@ -22,14 +22,37 @@ class SampleFunction:
 
     def make_sample(self):
         '''Method to create sample based on 'func_name'.'''
-        
+
         if self.name == "bass_drum":
+            # Parameters for bass_drum
+            # p[0]: Pitch (Hz)
+            # p[1]: Pitch mod
+            # p[2]: Pitch decay (s)
+            # p[3]: Amp decay (s)
             self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
             self.length = 2
             
         elif self.name == "snare_drum":
-            self.func = 0
+            # Parameters for bass_drum
+            # p[0]: Pitch (Hz)
+            # p[1]: Pitch mod
+            # p[2]: Pitch decay (s)
+            # p[3]: Amp decay (s)
+            # p[4]: Noise decay
+            # p[5]: noise/tone ratio
+            self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
             self.length = 1
+
+        elif self.name == "hi_hat":
+            # Parameters for hi_hat
+            # p[0]: Noise decay
+            # p[1]: AM mod
+            # p[2]: AM frequency
+            
+            self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
+            self.length = 1
+
+
     
 
 
