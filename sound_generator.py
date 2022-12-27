@@ -149,7 +149,6 @@ def substractive_synth_1(seq, file, cutoff, amp_adsr, waveshape_1, waveshape_2, 
 def play_function(file, seq, instrument_func, parameters, choke = False):
     print("Making a '" + instrument_func.name + "'...")
 
-    print(instrument_func.func)
 
     # Making the sample
     
@@ -162,7 +161,7 @@ def play_function(file, seq, instrument_func, parameters, choke = False):
     # Loop over events in sequence
     for ev in seq.events:
         # Creating a sine wave
-
+        print("Starting sample at:", ev.start)
         t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
         t1 = instrument_func.func(x, parameters) # Sound
         t2 = np.zeros(int((file.duration - (ev.start+instrument_func.length))*file.samplerate))              # Zeroes at the end of sound
@@ -170,8 +169,6 @@ def play_function(file, seq, instrument_func, parameters, choke = False):
 
         # If choke is true then remove other sounds when new sound starts playing.
         if choke==True:
-            print("Start of sample:", ev.start*file.samplerate)
-            print("End of sample:", ((ev.start+instrument_func.length))*file.samplerate)
             file.signal[int(ev.start*file.samplerate):int(((ev.start+instrument_func.length))*file.samplerate)] = 0
 
         # Add sound to signal

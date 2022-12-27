@@ -8,7 +8,7 @@ from effects import *
 from sound_generator import *
 from math_samples import *
 
-np.random.seed(514)
+#np.random.seed(514)
 
 
 signal = Signal(
@@ -17,19 +17,26 @@ signal = Signal(
     "audio_tests/drum_test.wav"   # file Name
 )
 
-# HH pattern
 
-sequence = Sequence(120, 44100)
 
-sequence.play_metronome(
-    0,  # Note start
-    16, # Note end
-    1   # Note length
+# First create HH pattern
+
+sequence = Sequence(
+    120,    # BPM
+    44100   # Sampling rate
 )
 
-# Possibilities:
-# bass_drum
-# snare_drum
+'''sequence.play_metronome(
+    0,  # Note start
+    4, # Note end
+    np.random.choice(
+        [1, 0.5, 0.25],  # Decide for note lengths of hi-hat
+        p = [0.25, 0.5, 0.25]   # more likely to use 8th notes
+    ) 
+)'''
+
+sequence.make_hihat(0, 4)
+
 
 sd = SampleFunction("snare_drum", 2)
 p_sd = [

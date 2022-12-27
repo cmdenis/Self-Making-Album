@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Event:
-    def __init__(self, midi_note, start, end):
+    def __init__(self, midi_note, start, end, message = None):
         # Handling possible misuse cases
         if start > end:
             raise NameError("Starting Time is After End Time...")
@@ -86,6 +86,59 @@ class Sequence:
             self.events.sort(key = lambda x: x.start)
         else:
             self.events.sort(key = lambda x: x.start)
+
+    def make_hihat(self, start_time, end_time, midi_note = 0):
+        note_length = np.random.choice(
+            [1, 0.5, 0.25],         # Decide for note lengths of hi-hat
+            p = [0.25, 0.5, 0.25]   # more likely to use 8th notes
+        ) 
+
+        # Make usual pattern (with note on each time)
+        self.play_metronome(
+            start_time, # Note start
+            end_time,   # Note end
+            note_length,# Note length
+            midi_note=midi_note
+        )
+
+        # Create a weight that depends on the length of the notes
+        weight = (-4*(note_length - 0.7)**2 + 1.15)*2
+
+        # Add extra random notes in between main notes
+        for shot in np.arange(start_time + note_length/2, end_time, note_length)*self.beat_time:
+            if np.random.rand() < 0.2*weight and (0<= np.mod(shot, 2) < 1):
+                print(1, shot)
+                self.events.append(
+                    Event(
+                        midi_note,
+                        shot,
+                        shot+0.01
+                    )
+                )
+
+            elif np.random.rand() < 0.3*weight and (1 <= np.mod(shot, 2) < 1.5):
+                print(2)
+                self.events.append(
+                    Event(
+                        midi_note,
+                        shot,
+                        shot+0.01
+                    )
+                )
+
+            elif np.random.rand() < 0.4*weight and (1.5 <= np.mod(shot, 2) < 2):
+                print(3)
+                self.events.append(
+                    Event(
+                        midi_note,
+                        shot,
+                        shot+0.01
+                    )
+                )
+
+            
+
+
 
 
         
