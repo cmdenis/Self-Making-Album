@@ -134,6 +134,14 @@ def reverb(signal, length, dry_wet, new_ir = False):
     #plt.show()
     return signal
 
+def waveshaper(signal, func = None):
+    '''Waveshaping function to add distortion to signal.'''
+    print("Applying waveshaping to signal...")
+    if func == None:
+        signal.signal = 1 - 2/(1+np.exp(4*signal.signal))
+    else:
+        signal.signal = func(signal.signal)
+
 if __name__=="__main__":
     x = np.linspace(-5, 5, 1000)
     for i in range(3):

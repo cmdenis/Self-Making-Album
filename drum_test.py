@@ -8,7 +8,7 @@ from effects import *
 from sound_generator import *
 from math_samples import *
 
-np.random.seed(911)
+np.random.seed(12398)
 
 
 signal = Signal(
@@ -67,9 +67,9 @@ bd_sequence.loop_sequence(4, 0, final_beat*60/bpm)
 
 bd = SampleFunction("bass_drum", 2, sample_rate) # Initialize sample
 p_bd = [
-    30,    # p[0]: Pitch (Hz)
+    40,    # p[0]: Pitch (Hz)
     8,    # p[1]: Pitch mod
-    0.05,    # p[2]: Pitch decay (s)
+    0.03,    # p[2]: Pitch decay (s)
     0.5,    # p[3]: Amp decay (s)
 ]
 
@@ -117,6 +117,12 @@ play_function(
     ],
     choke = False
 )
+
+
+# Adding waveshaper to signal
+waveshaper(signal)
+#reverb(signal, 1, 0.1)
+
 
 
 # Save signal
