@@ -8,7 +8,7 @@ from effects import *
 from sound_generator import *
 from math_samples import *
 
-np.random.seed(5401)
+np.random.seed(911)
 
 
 signal = Signal(
@@ -68,7 +68,7 @@ bd_sequence.loop_sequence(4, 0, final_beat*60/bpm)
 bd = SampleFunction("bass_drum", 2, sample_rate) # Initialize sample
 p_bd = [
     30,    # p[0]: Pitch (Hz)
-    7,    # p[1]: Pitch mod
+    8,    # p[1]: Pitch mod
     0.05,    # p[2]: Pitch decay (s)
     0.5,    # p[3]: Amp decay (s)
 ]
@@ -81,16 +81,19 @@ play_function(  # Play sample
     choke = False
 )
 
-'''
-# Make snare drum
 
+# Make snare drum
 sd_sequence = Sequence( # Initialize sequence
     bpm,    # BPM
     44100   # Sampling rate
 )
-sd_sequence.play_metronome(2, final_beat, 4)    # Make beats
+sd_sequence.make_sd(0, final_beat) # Make beats
+
+# Loop pattern
+sd_sequence.loop_sequence(4, 0, final_beat*60/bpm)
 
 sd = SampleFunction("snare_drum", 2, sample_rate)
+
 p_sd = [
     400,    # p[0]: Pitch (Hz)
     2,    # p[1]: Pitch mod
@@ -110,17 +113,11 @@ play_function(
         0.1,    # p[2]: Pitch decay (s)
         0.08,    # p[3]: Pitch Amp decay (s)
         0.08,    # p[4]: Noise decay
-        0.5     # p[5]: noise/tone ratio
+        0.3     # p[5]: noise/tone ratio
     ],
     choke = False
 )
 
-# p[0]: Pitch (Hz)
-            # p[1]: Pitch mod
-            # p[2]: Pitch decay (s)
-            # p[3]: Amp decay (s)
-            # p[4]: Noise decay
-            # p[5]: noise/tone ratio
-'''
+
 # Save signal
 signal.save_sound()

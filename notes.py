@@ -156,6 +156,29 @@ class Sequence:
         
         self.events = list(np.array(self.events)[beats])
 
+    def make_sd(self, start_time, end_time, midi_note = 0):
+        '''Making Snare Drum sequence'''
+        print("Making Snare Drum Sequence...")
+
+        # Boolean array to dettermine is beats are being selected
+        beats = np.array([
+            0.05,    # 1
+            0.10,   # 1+
+            0.05,    # 2
+            0.05,    # 2+
+            0.98,    # 3
+            0.05,    # 3+
+            0.2,    # 4
+            0.2     # 4+
+        ]) > np.random.rand(8)
+
+        for i in range(8):
+            self.events.append(
+                Event(midi_note, (start_time + i*0.5)*self.beat_time, (end_time + i*0.5)*self.beat_time)
+            )
+        
+        self.events = list(np.array(self.events)[beats])
+
 
     def loop_sequence(self, n, start_time, end_time):
         '''Method to loop a section n times after it has occured.

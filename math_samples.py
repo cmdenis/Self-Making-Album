@@ -64,25 +64,3 @@ class SampleFunction:
             #self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
             self.func = hh
             self.length = 1
-
-
-    
-
-
-
-
-
-
-'''
-# Bass drum 
-bass_drum = Sample_function(
-    lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3]), 
-    2,   # Duration in seconds
-    "Bass Drum"
-)
-# Parameters for bass_drum
-# p[0]: Pitch (Hz)
-# p[1]: Pitch mod
-# p[2]: Pitch decay (s)
-# p[3]: Amp decay (s)
-'''
