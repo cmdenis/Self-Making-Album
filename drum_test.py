@@ -8,7 +8,7 @@ from effects import *
 from sound_generator import *
 from math_samples import *
 
-np.random.seed(514)
+np.random.seed(5401)
 
 
 signal = Signal(
@@ -31,7 +31,7 @@ hh_sequence = Sequence(
 # Make 1 bar sequence
 hh_sequence.make_hihat(0, final_beat)
 
-
+# Loop the sequence 4 times
 hh_sequence.loop_sequence(4, 0, final_beat*60/bpm)
 
 
@@ -51,13 +51,19 @@ play_function(
     choke = True
 )
 
-'''
+
 # bass drum pattern
 bd_sequence = Sequence( # Initialize sequence
-    bpm,    # BPM
-    sample_rate   # Sampling rate
+    bpm,                # BPM
+    sample_rate         # Sampling rate
 )
-bd_sequence.play_metronome(0, final_beat, 1)    # Make beats
+
+#bd_sequence.play_metronome(0, final_beat, 1)    # Make beats
+
+bd_sequence.make_bd(0, final_beat)
+
+# Loop the sequence 4 times
+bd_sequence.loop_sequence(4, 0, final_beat*60/bpm)
 
 bd = SampleFunction("bass_drum", 2, sample_rate) # Initialize sample
 p_bd = [
@@ -75,7 +81,7 @@ play_function(  # Play sample
     choke = False
 )
 
-
+'''
 # Make snare drum
 
 sd_sequence = Sequence( # Initialize sequence

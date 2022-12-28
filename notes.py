@@ -86,6 +86,8 @@ class Sequence:
             self.events.sort(key = lambda x: x.start)
 
     def make_hihat(self, start_time, end_time, midi_note = 0):
+        '''Method to make hi-hat sequence'''
+        print("Making Hi-Hat Sequence...")
         note_length = np.random.choice(
             [1, 0.5, 0.25],         # Decide for note lengths of hi-hat
             p = [0.25, 0.5, 0.25]   # more likely to use 8th notes
@@ -130,6 +132,30 @@ class Sequence:
                         shot+0.01
                     )
                 )
+
+    def make_bd(self, start_time, end_time, midi_note = 0):
+        '''Making Bass Drum sequence'''
+        print("Making Bass Drum Sequence...")
+
+        # Boolean array to dettermine is beats are being selected
+        beats = np.array([
+            0.9,    # 1
+            0.35,   # 1+
+            0.6,    # 2
+            0.3,    # 2+
+            0.1,    # 3
+            0.3,    # 3+
+            0.4,    # 4
+            0.2     # 4+
+        ]) > np.random.rand(8)
+
+        for i in range(8):
+            self.events.append(
+                Event(midi_note, (start_time + i*0.5)*self.beat_time, (end_time + i*0.5)*self.beat_time)
+            )
+        
+        self.events = list(np.array(self.events)[beats])
+
 
     def loop_sequence(self, n, start_time, end_time):
         '''Method to loop a section n times after it has occured.
