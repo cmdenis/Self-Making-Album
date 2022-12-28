@@ -161,7 +161,7 @@ def play_function(file, seq, instrument_func, parameters, choke = False):
     # Loop over events in sequence
     for ev in seq.events:
         # Creating a sine wave
-        print("Starting sample at:", ev.start)
+        #print("Starting sample at:", ev.start)
         t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
         t1 = instrument_func.func(x, parameters) # Sound
         t2 = np.zeros(int((file.duration - (ev.start+instrument_func.length))*file.samplerate))              # Zeroes at the end of sound

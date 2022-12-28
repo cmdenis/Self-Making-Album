@@ -58,12 +58,10 @@ class Sequence:
                     )      # Appending note on to sequence
             )
 
-
     def play_chord_sequence(self, roots, chord_idx, bounds, chord_times):
         for root, idx, bound, chord_time in zip(roots, chord_idx, bounds, chord_times):
             self.play_chord(root, idx, bound, chord_time[0]*self.beat_time, chord_time[1]*self.beat_time)
     
-
     def play_metronome(self, start_time, end_time, note_length, midi_note = 0):
         '''Plays a single note repeatedly with interval corresponding to note_length. Starts sequence at 'start_time' and ends at 'end_time'.'''
 
@@ -102,12 +100,11 @@ class Sequence:
         )
 
         # Create a weight that depends on the length of the notes
-        weight = (-4*(note_length - 0.7)**2 + 1.15)
+        weight = (-4*(note_length - 0.7)**2 + 1.15)*0.25
 
         # Add extra random notes in between main notes
         for shot in np.arange(start_time + note_length/2, end_time, note_length)*self.beat_time:
             if np.random.rand() < 0.2*weight and (0<= np.mod(shot, 2) < 1):
-                print(1, shot)
                 self.events.append(
                     Event(
                         midi_note,
@@ -117,7 +114,6 @@ class Sequence:
                 )
 
             elif np.random.rand() < 0.3*weight and (1 <= np.mod(shot, 2) < 1.5):
-                print(2)
                 self.events.append(
                     Event(
                         midi_note,
@@ -127,7 +123,6 @@ class Sequence:
                 )
 
             elif np.random.rand() < 0.4*weight and (1.5 <= np.mod(shot, 2) < 2):
-                print(3)
                 self.events.append(
                     Event(
                         midi_note,
@@ -135,6 +130,39 @@ class Sequence:
                         shot+0.01
                     )
                 )
+
+    def loop_sequence(self, n, start_time, end_time):
+        '''Method to loop a section n times after it has occured.
+        This will overwrite whatever occurs in the looping time region.'''
+
+        # Should not be needed, I think...
+        self.sort_sequence()
+
+        # Duration of the loop
+        loop_duration = end_time-start_time
+
+        # Copy events before emptying the list
+        all_events = self.events.copy()
+        self.events = []
+
+        # Iterate over events
+        for ev in all_events:
+
+            # If events are in desired loop range, loop them over different times
+            if start_time <= ev.start < end_time:
+                for i in range(n):
+                    self.events.append(
+                        Event(
+                            ev.midi_note,
+                            ev.start + i * loop_duration,
+                            ev.end + i * loop_duration
+                        )
+                    )
+
+            # If events are not part of loop, simply append them to event list
+            elif start_time + loop_duration * n < ev.start or ev.start < start_time:
+                self.events.append(ev)
+
 
             
 

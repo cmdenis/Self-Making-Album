@@ -8,11 +8,12 @@ import matplotlib.pyplot as plt
 from effects import *
 
 class SampleFunction:
-    def __init__(self, func_name, length, func = None):
+    def __init__(self, func_name, length, sample_rate, func = None):
         '''Initializes object. If func is left blank, then it will be replaced by the preset samples from 'make_sample'.'''
 
         self.name = func_name      # Name of instrument
         self.length = length        # Length of sample (in seconds)
+        self.sample_rate = sample_rate
 
         # Checks if user inputted custom function
         if func == None:
@@ -40,7 +41,13 @@ class SampleFunction:
             # p[3]: Amp decay (s)
             # p[4]: Noise decay
             # p[5]: noise/tone ratio
-            self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
+            def sd(x, p):
+                sound = np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
+                filt = sci.signal.butter(3, 200, btype="highpass", fs = self.sample_rate, output="sos")
+                return sci.signal.sosfilt(filt, sound)
+
+            self.func = sd
+            #self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
             self.length = 1
 
         elif self.name == "hi_hat":
@@ -51,7 +58,7 @@ class SampleFunction:
 
             def hh(x, p):
                 sound = np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2) + np.sin(2*np.pi*x*2000)*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)*np.exp(-x/0.01)*0.2
-                filt = sci.signal.butter(3, 500, btype="highpass", fs = 44100, output="sos")
+                filt = sci.signal.butter(3, 500, btype="highpass", fs = self.sample_rate, output="sos")
                 return sci.signal.sosfilt(filt, sound)
             
             #self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
