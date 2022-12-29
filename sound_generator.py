@@ -18,8 +18,6 @@ class Signal:
         self.length = duration * samplerate
 
     def save_sound(self):
-
-        
         # Interpolate data to make sampling frequencies match
         print("Original signal is at", self.samplerate, "Hz sampling rate.")
         print("Saving signal at", self.save_samplerate, "Hz sampling rate.")

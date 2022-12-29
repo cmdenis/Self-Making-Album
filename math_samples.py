@@ -32,6 +32,14 @@ class SampleFunction:
             # p[3]: Amp decay (s)
             self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
             self.length = 2
+
+            # Create drum parameters
+            self.param = [
+                40,    # p[0]: Pitch (Hz)
+                8,    # p[1]: Pitch mod
+                0.03,    # p[2]: Pitch decay (s)
+                0.5,    # p[3]: Amp decay (s)
+            ]
             
         elif self.name == "snare_drum":
             # Parameters for bass_drum
@@ -50,6 +58,15 @@ class SampleFunction:
             #self.func = lambda x, p: np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
             self.length = 1
 
+            self.param = [
+                400,    # p[0]: Pitch (Hz)
+                2,    # p[1]: Pitch mod
+                0.1,    # p[2]: Pitch decay (s)
+                0.1,    # p[3]: Amp decay (s)
+                0.07,    # p[4]: noise decay
+                0.5     # p[5]: noise/tone ratio
+            ]
+
         elif self.name == "hi_hat":
             # Parameters for hi_hat
             # p[0]: Noise decay
@@ -64,3 +81,9 @@ class SampleFunction:
             #self.func = lambda x, p: np.random.uniform(-1, 1, len(x))*np.exp(-x/p[0])*(1 - p[1]*np.sin(2*np.pi*p[2]*x)**2)
             self.func = hh
             self.length = 1
+
+            self.param = [
+                0.005,   # p[0]: Noise decay
+                1,      # p[1]: AM mod
+                1000,    # p[2]: AM frequency
+            ]
