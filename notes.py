@@ -42,6 +42,13 @@ class Sequence:
                 Event(selected, self.beat_time*start_beat + i*note_length, self.beat_time*(i+1)*note_length)       # Appending note on to track
             )
 
+    def shift_notes_beat(self, shift):
+        '''Shifts notes by a number of beats'''
+        for ev in self.events:
+            ev.start += shift*self.beat_time
+            ev.end += shift*self.beat_time
+
+
     def play_chord(self, root, chord_idx, bounds, chord_start, chord_duration):
         scale = Scale(np.array([0]), root)
         note_choice = np.ndarray.flatten(scale.chord_scale_list[chord_idx])     # Flatten array with all possible note choices
@@ -149,9 +156,9 @@ class Sequence:
             0.2     # 4+
         ]) > np.random.rand(8)
 
-        for i in range(8):
+        for i in np.arange(start_time, end_time, 0.5):
             self.events.append(
-                Event(midi_note, (start_time + i*0.5)*self.beat_time, (end_time + i*0.5)*self.beat_time)
+                Event(midi_note, (start_time + i)*self.beat_time, (end_time + i)*self.beat_time)
             )
         
         self.events = list(np.array(self.events)[beats])
