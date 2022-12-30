@@ -35,11 +35,17 @@ class SampleFunction:
 
             # Create drum parameters
             self.param = [
+                sci.stats.truncnorm.rvs((20-40)/20, (20000-40)/20)*20 + 40,     # p[0]: Pitch (Hz)
+                sci.stats.truncnorm.rvs((0.9-6)/2, (15-6)/2)*2 + 6,             # p[1]: Pitch mod
+                sci.stats.truncnorm.rvs((0.005-0.03)/0.03, (1-0.03)/0.03)*0.03 + 0.03,    # p[2]: Pitch decay (s)
+                sci.stats.truncnorm.rvs((0.002-0.5)/1, (3-0.5)/1)*1 + 0.5,    # p[3]: Amp decay (s)
+            ]
+            '''self.param = [
                 40,    # p[0]: Pitch (Hz)
                 8,    # p[1]: Pitch mod
                 0.03,    # p[2]: Pitch decay (s)
                 0.5,    # p[3]: Amp decay (s)
-            ]
+            ]'''
             
         elif self.name == "snare_drum":
             # Parameters for bass_drum
@@ -60,10 +66,10 @@ class SampleFunction:
 
             self.param = [
                 400,    # p[0]: Pitch (Hz)
-                2,    # p[1]: Pitch mod
+                2,      # p[1]: Pitch mod
                 0.1,    # p[2]: Pitch decay (s)
                 0.1,    # p[3]: Amp decay (s)
-                0.07,    # p[4]: noise decay
+                0.07,   # p[4]: noise decay
                 0.5     # p[5]: noise/tone ratio
             ]
 
@@ -83,7 +89,13 @@ class SampleFunction:
             self.length = 1
 
             self.param = [
+                0.005,  # p[0]: Noise decay
+                1,      # p[1]: AM mod
+                1000    # p[2]: AM frequency
+            ]
+
+            '''self.param = [
                 0.005,   # p[0]: Noise decay
                 1,      # p[1]: AM mod
                 1000,    # p[2]: AM frequency
-            ]
+            ]'''

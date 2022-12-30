@@ -10,7 +10,7 @@ from sound_generator import *
 from math_samples import *
 
 
-np.random.seed(444)
+np.random.seed(99)
 def make_4_4_drum(signal, bpm, start_beat, length, tracks, master_only = True, chokes  = None):
     '''Function to make 4/4 drum tracks. Takes in
     bpm: BPM of tracks

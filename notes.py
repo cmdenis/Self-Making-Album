@@ -92,7 +92,7 @@ class Sequence:
         else:
             self.events.sort(key = lambda x: x.start)
 
-    def make_hihat(self, start_time, end_time, midi_note = 0):
+    def make_hihat(self, start_time, end_time, extra_note_scaling = 0.25, midi_note = 0):
         '''Method to make hi-hat sequence'''
         print("Making Hi-Hat Sequence...")
         note_length = np.random.choice(
@@ -109,7 +109,7 @@ class Sequence:
         )
 
         # Create a weight that depends on the length of the notes
-        weight = (-4*(note_length - 0.7)**2 + 1.15)*0.25
+        weight = (-4*(note_length - 0.7)**2 + 1.15)*extra_note_scaling
 
         # Add extra random notes in between main notes
         for shot in np.arange(start_time + note_length/2, end_time, note_length)*self.beat_time:
