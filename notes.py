@@ -144,8 +144,11 @@ class Sequence:
         '''Making Bass Drum sequence'''
         print("Making Bass Drum Sequence...")
 
-        # Boolean array to dettermine is beats are being selected
-        beats = np.array([
+        # Duration of sequence in 8th notes
+        duration = int(2*(end_time - start_time))
+
+        # Boolean array to determine if beats are being selected
+        beats = np.tile(np.array([
             0.9,    # 1
             0.35,   # 1+
             0.6,    # 2
@@ -154,8 +157,13 @@ class Sequence:
             0.3,    # 3+
             0.4,    # 4
             0.2     # 4+
-        ]) > np.random.rand(8)
+        ]), int(np.ceil(duration/8))) > np.random.rand(int(np.ceil(duration/8)*8))
 
+
+        # Cut down the one-bar beat to proper length
+        beats = beats[0:duration]
+
+        # Loop over notes
         for i in np.arange(start_time, end_time, 0.5):
             self.events.append(
                 Event(midi_note, (start_time + i)*self.beat_time, (end_time + i)*self.beat_time)
@@ -167,21 +175,29 @@ class Sequence:
         '''Making Snare Drum sequence'''
         print("Making Snare Drum Sequence...")
 
-        # Boolean array to dettermine is beats are being selected
-        beats = np.array([
-            0.05,    # 1
-            0.10,   # 1+
-            0.05,    # 2
-            0.05,    # 2+
-            0.98,    # 3
-            0.05,    # 3+
-            0.2,    # 4
-            0.2     # 4+
-        ]) > np.random.rand(8)
+        # Duration of sequence in 8th notes
+        duration = int(2*(end_time - start_time))
 
-        for i in range(8):
+        # Boolean array to determine if beats are being selected
+        probs = np.array([
+            0*0.05,    # 1
+            0*0.10,   # 1+
+            0*0.05,    # 2
+            0*0.05,    # 2+
+            1,    # 3
+            0*0.05,    # 3+
+            0*0.2,    # 4
+            0*0.2     # 4+
+        ])
+        beats = np.tile(probs, int(np.ceil(duration/8))) > np.random.rand(int(np.ceil(duration/8)*8))
+
+        # Cut down the one-bar beat to proper length
+        beats = beats[0:duration]
+
+        # Loop over notes
+        for i in np.arange(start_time, end_time, 0.5):
             self.events.append(
-                Event(midi_note, (start_time + i*0.5)*self.beat_time, (end_time + i*0.5)*self.beat_time)
+                Event(midi_note, (start_time + i)*self.beat_time, (end_time + i)*self.beat_time)
             )
         
         self.events = list(np.array(self.events)[beats])
