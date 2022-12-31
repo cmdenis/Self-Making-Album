@@ -67,7 +67,7 @@ class Sequence:
 
     def play_chord_sequence(self, roots, chord_idx, bounds, chord_times):
         for root, idx, bound, chord_time in zip(roots, chord_idx, bounds, chord_times):
-            self.play_chord(root, idx, bound, chord_time[0]*self.beat_time, chord_time[1]*self.beat_time)
+            self.play_chord(root, idx, bound, chord_time[0], chord_time[1])
     
     def play_metronome(self, start_time, end_time, note_length, midi_note = 0):
         '''Plays a single note repeatedly with interval corresponding to note_length. Starts sequence at 'start_time' and ends at 'end_time'.'''

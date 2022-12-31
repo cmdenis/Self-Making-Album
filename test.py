@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import scipy as sci
 
 
-x = sci.stats.truncnorm.rvs((20-35)/20, (20000-35)/20, size = 100000)*20 + 35
-plt.hist(x)
-plt.show()
+a = [1,2, 3]
+b = [2, 2, 2]
+c = [1,4,5]
+
+print(len(a)==len(b)==len(c))
