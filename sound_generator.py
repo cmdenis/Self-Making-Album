@@ -38,6 +38,10 @@ class Signal:
         # Write signal to disk
         write(self.filename, self.save_samplerate, data.astype(np.int16))
 
+    def rms(self):
+        '''Method to get the rms of the signal for mixing purposes.'''
+        return np.sqrt(np.sum(self.signal**2)/self.length)
+
 def sine_synth(seq, file):
     # Loop over events in sequence
     print("Using 'sine_synth' generator...")
