@@ -7,7 +7,7 @@ from drum_maker import *
 from pydub import AudioSegment
 import os
 
-np.random.seed(71)
+np.random.seed(999)
 
 # Initial parameters
 bpm = custom_norm(70, 200, 120, 40)
@@ -40,7 +40,7 @@ make_4_4_drum(drums_signal, bpm, 0, length, ["bass_drum", "snare_drum", "hi_hat"
 
 # Master signal
 master = Signal(sr, time, file_name+".wav")
-master.signal = drums_signal.signal + chord_signal.signal/12
+master.signal = 6*drums_signal.signal/drums_signal.rms() + chord_signal.signal/chord_signal.rms()
 master.save_sound()
 
 if mp3 == True:
