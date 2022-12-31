@@ -180,14 +180,14 @@ class Sequence:
 
         # Boolean array to determine if beats are being selected
         probs = np.array([
-            0*0.05,    # 1
-            0*0.10,   # 1+
-            0*0.05,    # 2
-            0*0.05,    # 2+
-            1,    # 3
-            0*0.05,    # 3+
-            0*0.2,    # 4
-            0*0.2     # 4+
+            0.05,    # 1
+            0.10,   # 1+
+            0.05,    # 2
+            0.05,    # 2+
+            0.98,    # 3
+            0.05,    # 3+
+            0.2,    # 4
+            0.2     # 4+
         ])
         beats = np.tile(probs, int(np.ceil(duration/8))) > np.random.rand(int(np.ceil(duration/8)*8))
 

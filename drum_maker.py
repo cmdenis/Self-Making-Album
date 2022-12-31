@@ -10,7 +10,7 @@ from sound_generator import *
 from math_samples import *
 
 
-np.random.seed(99)
+#np.random.seed(99)
 def make_4_4_drum(signal, bpm, start_beat, length, tracks, master_only = True, chokes  = None):
     '''Function to make 4/4 drum tracks. Takes in
     bpm: BPM of tracks
@@ -75,6 +75,14 @@ def make_4_4_drum(signal, bpm, start_beat, length, tracks, master_only = True, c
 
         play_function(sig, seq, sound, sound.param, choke = choke)
 
+        # Adding some reverb randomly
+        if 0.4 > np.random.rand():
+            reverb(
+                sig,                            # Signal
+                custom_norm(0.01, 4, 0.5, 0.5), # Length of reverb
+                custom_norm(0, 1, 0.3, 0.2)     # Dry/Wet Mix
+            )
+
         sound_tracks.append(sig)
         midi_tracks.append(seq)
     
@@ -82,13 +90,20 @@ def make_4_4_drum(signal, bpm, start_beat, length, tracks, master_only = True, c
     for track in sound_tracks:
         signal.signal += track.signal
 
+    # Adding saturation to drum
+    waveshaper(signal, intensity=custom_norm(3, 8, 4, 1))
+
 
 
 if __name__=='__main__':
+    bpm = custom_norm(70, 200, 120, 40)
+    length = 24
 
-    sig = Signal(44100, 12, "audio_tests/drum_maker44.wav")
+    time = length*60/bpm + 4
 
-    make_4_4_drum(sig, 120, 0, 8, ["bass_drum", "snare_drum", "hi_hat"])
+    sig = Signal(44100, time, "audio_tests/drum_maker44.wav")
+    
+    make_4_4_drum(sig, bpm, 0, length, ["bass_drum", "snare_drum", "hi_hat"])
 
     sig.save_sound()
 

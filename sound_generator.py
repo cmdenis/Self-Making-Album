@@ -11,10 +11,10 @@ class Signal:
         
         self.filename = filename                # Name of file
         self.samplerate = samplerate            # Sampling rate of array
-        self.duration = duration                # (Seconds)
+        self.duration = int(np.ceil(duration))       # (Seconds)
         self.save_samplerate = save_samplerate  # Sample rate of saved file
 
-        self.signal = np.zeros(samplerate*duration) # Signal
+        self.signal = np.zeros(samplerate*self.duration) # Signal
         self.length = duration * samplerate
 
     def save_sound(self):

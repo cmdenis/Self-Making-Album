@@ -6,6 +6,9 @@ import scipy as sci
 import matplotlib.pyplot as plt
 from notes import *
 
+def custom_norm(a, b, mean, sigma):
+    '''Function to create a normal distribution with bounds a to b, std sigma and mean'''
+    return sci.stats.truncnorm.rvs((a-mean)/sigma, (b-mean)/sigma)*sigma + mean
 
 def spectrum(signal, window_func = np.cos):
     '''Function that looks at the frequency spectrum of a signal.'''
@@ -134,11 +137,11 @@ def reverb(signal, length, dry_wet, new_ir = False):
     #plt.show()
     return signal
 
-def waveshaper(signal, func = None):
+def waveshaper(signal, intensity = 4, func = None):
     '''Waveshaping function to add distortion to signal.'''
     print("Applying waveshaping to signal...")
     if func == None:
-        signal.signal = 1 - 2/(1+np.exp(4*signal.signal))
+        signal.signal = 1 - 2/(1+np.exp(intensity*signal.signal))
     else:
         signal.signal = func(signal.signal)
 
