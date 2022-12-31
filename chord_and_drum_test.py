@@ -5,8 +5,9 @@ from math_samples import *
 from chord_pattern_maker import *
 from drum_maker import *
 from pydub import AudioSegment
+import os
 
-np.random.seed(70)
+np.random.seed(71)
 
 # Initial parameters
 bpm = custom_norm(70, 200, 120, 40)
@@ -14,6 +15,7 @@ length = 32
 time = length*60/bpm + 4
 sr = 44100
 file_name = "audio_tests/chord_and_drum_test"
+mp3 = True
 
 # Making signals
 
@@ -37,8 +39,10 @@ drums_signal = Signal(sr, time, None)
 make_4_4_drum(drums_signal, bpm, 0, length, ["bass_drum", "snare_drum", "hi_hat"])
 
 # Master signal
-master = Signal(sr, time, file_name)
+master = Signal(sr, time, file_name+".wav")
 master.signal = drums_signal.signal + chord_signal.signal/12
 master.save_sound()
 
-AudioSegment.from_wav("audio_tests/chord_and_drum_test"+".wav").export("audio_tests/chord_and_drum_test"+".mp3", format="mp3")
+if mp3 == True:
+    AudioSegment.from_wav("audio_tests/chord_and_drum_test"+".wav").export("audio_tests/chord_and_drum_test"+".mp3", format="mp3")
+    os.remove(file_name+".wav")
