@@ -13,22 +13,6 @@ from math_samples import *
 def simple_chord_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, length, instrument):
     '''Function to make a simple chord pattern.'''
 
-    # Choose number of chords in sequence
-    probs = np.array(
-        [
-            1, 
-            3, 
-            5, 
-            8,
-            5,
-            3
-        ]
-    )
-    nb_chords = np.random.choice([1, 2, 3, 4, 5, 6])
-    nb_chords = 4
-
-    
-
     # Obtain sequence of notes
     seq = Sequence(bpm, sig.samplerate)
 
@@ -37,6 +21,7 @@ def simple_chord_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, len
         [0, 2, 4, 5, 7, 9],
         size=nb_chords
     )
+    roots = np.mod(roots + scale, 12)
 
     # Chords
     chords = np.random.randint(0, high=4, size=nb_chords)
@@ -67,7 +52,6 @@ def simple_chord_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, len
         roots = np.tile(roots, n)[0:cut]
         bounds = np.tile(bounds, (n,1))[0:cut]
         chords = np.tile(chords, n)[0:cut]
-        print(times)
 
     # Case: smaller length than chord length
     elif length <= chord_length:
@@ -76,20 +60,6 @@ def simple_chord_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, len
         bounds = bounds[0:1]
         chords = chords[0:1]
 
-
-
-
-
-
-
-    
-
-    '''times = [
-        [0, 4],
-        [4, 4],
-        [8, 4],
-        [12, 4]
-    ]'''
 
     if not (len(roots) == len(chords) == len(bounds) == len(times)):
         raise ValueError("Lengths of roots, chords, bounds and times are not the same in 'simple_chord_maker'!")
