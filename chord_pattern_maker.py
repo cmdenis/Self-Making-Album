@@ -10,7 +10,7 @@ from sound_generator import *
 from math_samples import *
 
 
-def simple_chord_maker(sig, bpm, scale, start_beat, chord_length, length, instrument):
+def simple_chord_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, length, instrument):
     '''Function to make a simple chord pattern.'''
 
     # Choose number of chords in sequence
@@ -63,11 +63,13 @@ def simple_chord_maker(sig, bpm, scale, start_beat, chord_length, length, instru
 
         # Tile up the other arrays so that the number of events matches up
         n = int(np.ceil((launches + 1)/nb_chords))
-        roots = np.tile(roots, n)[0:launches+1]
-        bounds = np.tile(bounds, (n,1))[0:launches+1]
-        chords = np.tile(chords, n)[0:launches+1]
+        cut = int(np.ceil(length/chord_length))
+        roots = np.tile(roots, n)[0:cut]
+        bounds = np.tile(bounds, (n,1))[0:cut]
+        chords = np.tile(chords, n)[0:cut]
+        print(times)
 
-    # Case: smaller lenght than chord length
+    # Case: smaller length than chord length
     elif length <= chord_length:
         times = [[start_beat, length]]
         roots = roots[0:1]
@@ -107,7 +109,7 @@ if __name__=="__main__":
 
     # Making signals
     signal = Signal(44100, time, "audio_tests/chord_pattern_test.wav")
-    simple_chord_maker(signal, bpm, 0, 0, 4, length, saw_synth)
+    simple_chord_maker(signal, bpm, 0, 4, 0, 4, length, saw_synth)
 
     # Storing signal
     signal.save_sound()

@@ -16,6 +16,11 @@ class Signal:
 
         self.signal = np.zeros(samplerate*self.duration) # Signal
         self.length = duration * samplerate
+    
+    def __add__(self, x):
+        new = Signal(self.samplerate, self.duration, self.filename)
+        new.signal = self.signal + x.signal
+        return new
 
     def save_sound(self):
         # Interpolate data to make sampling frequencies match
