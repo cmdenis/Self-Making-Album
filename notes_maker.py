@@ -66,7 +66,7 @@ def notes_maker(sig, bpm, scale, nb_chords, start_beat, chord_length, length, in
     if not (len(roots) == len(chords) == len(bounds) == len(times)):
         raise ValueError("Lengths of roots, chords, bounds and times are not the same in 'simple_chord_maker'!")
     
-    bass_seq.make_bass_sequence(roots, times)
+    bass_seq.make_bass_sequence(roots, times, nb_chords)
     chord_seq.play_chord_sequence(roots, chords, bounds, times)
 
     # Create sound sequence  

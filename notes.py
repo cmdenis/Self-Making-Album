@@ -79,10 +79,24 @@ class Sequence:
                 Event(selected, self.beat_time*beat, self.beat_time*(beat + 0.25))       # Appending note on to track
             )
 
-    def make_bass_sequence(self, roots, times):
+    def make_bass_sequence(self, roots, times, pattern_length = None):
         '''Make bass sequence based on root of chords'''
+        print("Making bass line...")
 
-        roots = roots + np.random.choice([2, 3, 4], size = len(roots), p = [0.4, 0.4, 0.2])*12
+        if pattern_length == None or np.random.choice([True, False], p = [0.35, 0.65]):
+            print("Octave shifting around")
+            roots = roots + np.random.choice([2, 3, 4], size = len(roots), p = [0.4, 0.4, 0.2])*12
+        else:
+            print("Octave not shifting around")
+            octave = np.random.choice(
+                [2, 3, 4], 
+                size = pattern_length*np.random.randint(1, high = 2), 
+                p = [0.4, 0.4, 0.2]
+            )*12
+            octave = np.tile(octave, int(np.floor(len(roots)/(pattern_length*np.random.randint(1, high = 2))) + 1)*pattern_length*np.random.randint(1, high = 2))
+            octave = octave[0:len(times)]
+            roots = roots + octave
+            
 
         for root, time in zip(roots, times):
             self.events.append(

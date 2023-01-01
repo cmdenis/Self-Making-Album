@@ -8,10 +8,10 @@ from notes_maker import *
 from pydub import AudioSegment
 import os
 
-np.random.seed(999)
+#np.random.seed(991ee929)
 
 # Initial parameters
-bpm = custom_norm(70, 200, 120, 40)
+bpm = custom_norm(70, 200, 120, 100)
 length = 32
 time = length*60/bpm + 4
 sr = 44100
