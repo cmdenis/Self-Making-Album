@@ -31,16 +31,71 @@ class Sequence:
 
     def play_random(self, scale, start_beat, bounds, nb, note_length = 1):
         '''Function that just plays random notes (each as a whole note) in a scale, with a certain range.'''
+        note_choice = np.ndarray.flatten(scale.octaves)                 # Flatten array with all possible note choices
+        note_choice = note_choice[note_choice > bounds[0]]              # Notes within range
+        note_choice = note_choice[note_choice < bounds[1]]              # Notes within range
 
         for i in range(nb):
-            note_choice = np.ndarray.flatten(scale.octaves)                 # Flatten array with all possible note choices
-            note_choice = note_choice[note_choice > bounds[0]]              # Notes within range
-            note_choice = note_choice[note_choice < bounds[1]]              # Notes within range
             selected = np.random.choice(note_choice)                        # Random selection of notes within range
 
             self.events.append(
                 Event(selected, self.beat_time*start_beat + i*note_length, self.beat_time*(i+1)*note_length)       # Appending note on to track
             )
+
+    def make_note_sequence(self, scale, bounds, start_beat, length):
+        '''Make random note sequence based on a scale'''
+        beats = np.arrange(start_beat, start_beat + length, 0.25)
+        probs = np.array(
+            [
+                0.9,    # 1
+                0.2,    #
+                0.4,    #
+                0.3,    #
+                0.8,    # 2
+                0.2,    #
+                0.4,    #
+                0.3,    #
+                0.85,   # 3
+                0.2,    #
+                0.4,    #
+                0.3,    #
+                0.8,    # 4
+                0.2,    #
+                0.4,    #
+                0.3,    #
+
+            ]
+        )
+        beats = beats[probs > np.random.rand(len(probs))]
+
+        note_choice = np.ndarray.flatten(scale.octaves)                 # Flatten array with all possible note choices
+        note_choice = note_choice[note_choice > bounds[0]]              # Notes within range
+        note_choice = note_choice[note_choice < bounds[1]]              # Notes within range
+
+        for beat in beats:
+            selected = np.random.choice(note_choice)                        # Random selection of notes within range
+
+            self.events.append(
+                Event(selected, self.beat_time*beat, self.beat_time*(beat + 0.25))       # Appending note on to track
+            )
+
+    def make_bass_sequence(self, roots, times):
+        '''Make bass sequence based on root of chords'''
+
+        roots = roots + np.random.choice([2, 3, 4], size = len(roots), p = [0.4, 0.4, 0.2])*12
+
+        for root, time in zip(roots, times):
+            self.events.append(
+                Event(root, (time[0])*self.beat_time, (time[0]+time[1])*self.beat_time)
+            )
+
+
+
+
+
+
+
+
 
     def shift_notes_beat(self, shift):
         '''Shifts notes by a number of beats'''
