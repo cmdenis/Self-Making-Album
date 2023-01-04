@@ -1,4 +1,3 @@
-import mido 
 import numpy as np
 
 
