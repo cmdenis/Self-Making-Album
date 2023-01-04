@@ -20,3 +20,12 @@ def make_pattern(bpm, length, root, instruments):
     # Make patterns
     seqs.make_loop(8)
 
+
+if __name__=="__main__":
+
+    make_pattern(
+        120,
+        4,
+        0,
+        ["drum", "chords", "bass"]
+    )
