@@ -1,17 +1,3 @@
-a = [1, 2, 3, 4, 5]
-b = ['a', 'b', 'c', 'd', 'e']
+import numpy as np
 
-c = dict(zip(b, a))
-
-print(c["a"])
-
-print()
-
-for i in c:
-    print(i)
-
-b = ['k', 'b', 'c', 'd', 'e']
-
-
-for i in c:
-    print(i)
+print(np.arange(0, 4.001, 0.5))
