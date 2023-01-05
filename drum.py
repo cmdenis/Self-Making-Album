@@ -68,3 +68,30 @@ class SampleFunction:
                 custom_norm(200, 4000, 1000, 1000)          # p[2]: AM frequency
             ]
 
+def play_drum(file, seq, instrument_func, parameters, choke = False):
+    print("Making a '" + instrument_func.name + "'...")
+
+
+    # Making the sample
+    
+
+    x = np.arange(instrument_func.length*file.samplerate)/file.samplerate
+
+    if choke == True:
+        seq.sort_sequence()
+
+    # Loop over events in sequence
+    for ev in seq.events:
+        # Creating a sine wave
+        #print("Starting sample at:", ev.start)
+        t0 = np.zeros(int(ev.start*file.samplerate))                       # Zeroes before start of sound
+        t1 = instrument_func.func(x, parameters) # Sound
+        t2 = np.zeros(int((file.duration - (ev.start+instrument_func.length))*file.samplerate))              # Zeroes at the end of sound
+        buffer = np.zeros(10)   # Buffer to make all arrays of equal length
+
+        # If choke is true then remove other sounds when new sound starts playing.
+        if choke==True:
+            file.signal[int(ev.start*file.samplerate):int(((ev.start+instrument_func.length))*file.samplerate)] = 0
+
+        # Add sound to signal
+        file.signal += np.concatenate((t0, t1, t2, buffer))[:file.samplerate*file.duration]
