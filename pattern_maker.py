@@ -1,10 +1,15 @@
-from notes import *
-from drum_maker import *
+from notes import Event, Sequence, Multitrack, ChordPattern
+from drum_maker import DrumSequence
+from melody_maker import MelodySequence
+from bass_maker import BassSequence
+from chord_maker import ChordSequence
+import numpy as np
 
 
 
 
-def make_pattern(bpm, length, root, instruments):
+
+def make_pattern(bpm, root, instruments):
 
     
     # Initializes the tracks
@@ -18,24 +23,23 @@ def make_pattern(bpm, length, root, instruments):
         )
     )
 
-    # Circulates around the different instruments and creates the sequence based on the instrument
-    for instrument, seq in zip(seqs.instruments, seqs.sequences):
+    seqs.make_seqs()
 
-        if instrument == "chords":
-            make_chords(seq, seqs.chord_pattern, length)
-        elif instrument == "bass":
-            make_bass(seq, seqs.chord_pattern, length)
-        elif instrument == "melody":
-            make_melody(seq, seqs.chord_pattern, length)
-        elif instrument == "drum":
-            make_drum(seq, ["bass_drum", "snare_drum", "hi_hat"])
+    return seqs
 
 
 if __name__=="__main__":
 
-    make_pattern(
+    seqs = make_pattern(
         120,
-        4,
         0,
-        ["drum", "chords", "bass"]
+        [DrumSequence]
     )
+
+    '''for ev in seqs.sequences[0].events:
+        print("Strinking", ev.message, "at time", ev.start)
+'''
+    seqs.sequences[0].print_beat()
+
+
+    

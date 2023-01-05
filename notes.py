@@ -16,16 +16,17 @@ class Event:
         self.start = start                          # Time of start of sound
         self.end = end                              # Time of end of sound
         self.channel = channel
+        self.message = message
 
 
 class Sequence:
     '''Class for the sequence of events.'''
 
-    def __init__(self, bpm, name):
+    def __init__(self, bpm, chord_pattern):
         self.bpm = bpm              # Beats per mins
         #self.sr = sr                # Sample rate
         self.beat_time = 60/bpm     # Duration of a whole note (in seconds)
-        self.name = name
+        self.chord_pattern = chord_pattern
         self.events = []
 
     def shift_notes_beat(self, shift):
@@ -162,18 +163,30 @@ class ChordPattern:
 class Multitrack:
     '''Class to make many tracks/sequences.'''
     def __init__(self, bpm, instruments, chord_pattern):
-        self.instruments = instruments
+        self.instruments = instruments      # List of classes
         self.bpm = bpm
         self.chord_pattern = chord_pattern
 
         self.sequences = []
+
+        # Instantiating instruments
         for instrument in instruments:
             self.sequences.append(
-                Sequence(
+                instrument(
                     bpm,
-                    instrument
+                    chord_pattern
                 )
             )
+        
+        # Appending names of sequences to variable
+        self.names = [seq.name for seq in self.sequences]
+
+    def make_seqs(self):
+        '''Method to create sequence for all sequences in the multitrack.'''
+        for seq in self.sequences:
+            seq.make_seq()
+
+
 
 
 

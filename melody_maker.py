@@ -1,3 +1,9 @@
+from notes import Sequence
+import numpy as np
 
-def make_melody():
-    return
+class MelodySequence(Sequence):
+
+    def __init__(self, bpm, chord_pattern):
+        super().__init__(bpm, chord_pattern)
+        self.name = "melody"
+        
