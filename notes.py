@@ -186,6 +186,13 @@ class Multitrack:
         for seq in self.sequences:
             seq.make_seq()
 
+    def loop_multitrack(self, n, start_time, end_time):
+        '''Method to loop a section n times after it has occured.
+        This will overwrite whatever occurs in the looping time region.'''
+
+        for seq in self.sequences:
+            seq.loop_sequence(n, start_time, end_time)
+
 
 
 
