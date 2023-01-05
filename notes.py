@@ -1,14 +1,9 @@
 import numpy as np
-from chord_maker import *
-from bass_maker import *
-from melody_maker import *
-from drum_maker import *
-
 
 
 class Event:
     '''Class for note events. Contains info about pitch, start and length of the notes.'''
-    def __init__(self, midi_note, start, end, message = None):
+    def __init__(self, midi_note, start, end, channel, message = None):
         # Handling possible misuse cases
         if start > end:
             raise NameError("Starting Time is After End Time...")
@@ -20,8 +15,7 @@ class Event:
         self.pitch = 440*2**((midi_note - 69)/12)   # Pitch of sound (Hz)
         self.start = start                          # Time of start of sound
         self.end = end                              # Time of end of sound
-
-
+        self.channel = channel
 
 
 class Sequence:
@@ -31,7 +25,7 @@ class Sequence:
         self.bpm = bpm              # Beats per mins
         #self.sr = sr                # Sample rate
         self.beat_time = 60/bpm     # Duration of a whole note (in seconds)
-
+        self.name = name
         self.events = []
 
     def shift_notes_beat(self, shift):
@@ -39,7 +33,6 @@ class Sequence:
         for ev in self.events:
             ev.start += shift*self.beat_time
             ev.end += shift*self.beat_time
-
 
     def sort_sequence(self, sort_pitch_mode = 'lower_last'):
         '''Function to sort the elements of the sequence temporally. Can be useful for choked percussions.'''
@@ -51,7 +44,6 @@ class Sequence:
             self.events.sort(key = lambda x: x.start)
         else:
             self.events.sort(key = lambda x: x.start)
-
 
     def loop_sequence(self, n, start_time, end_time):
         '''Method to loop a section n times after it has occured.
@@ -77,13 +69,16 @@ class Sequence:
                         Event(
                             ev.midi_note,
                             ev.start + i * loop_duration,
-                            ev.end + i * loop_duration
+                            ev.end + i * loop_duration,
+                            ev.channel
                         )
                     )
 
             # If events are not part of loop, simply append them to event list
             elif start_time + loop_duration * n < ev.start or ev.start < start_time:
                 self.events.append(ev)
+
+
 
 class ChordPattern:
     '''Class for chord pattern object'''
@@ -159,7 +154,6 @@ class ChordPattern:
                 ) + np.outer(np.ones(3), np.arange(10))*12
             )))
 
-
     def transpose(self, shift):
         "Transpose chord pattern by amount in semi-tones."
         self.roots = np.mod(self.roots+shift, 12)
@@ -181,19 +175,6 @@ class Multitrack:
                 )
             )
 
-    def make_loop(self, length):
-        
-        # Circulates around the different instruments and creates the sequence based on the instrument
-        for instrument, seq in zip(self.instruments, self.sequences):
-
-            if instrument == "chords":
-                make_chords(seq, self.chord_pattern, length)
-            elif instrument == "bass":
-                make_bass(seq, self.chord_pattern, length)
-            elif instrument == "melody":
-                make_melody(seq, self.chord_pattern, length)
-            elif instrument == "drum":
-                make_drum(seq, length)
 
 
 if __name__=="__main__":

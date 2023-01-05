@@ -1,4 +1,5 @@
 from notes import *
+from drum_maker import *
 
 
 
@@ -17,8 +18,17 @@ def make_pattern(bpm, length, root, instruments):
         )
     )
 
-    # Make patterns
-    seqs.make_loop(8)
+    # Circulates around the different instruments and creates the sequence based on the instrument
+    for instrument, seq in zip(seqs.instruments, seqs.sequences):
+
+        if instrument == "chords":
+            make_chords(seq, seqs.chord_pattern, length)
+        elif instrument == "bass":
+            make_bass(seq, seqs.chord_pattern, length)
+        elif instrument == "melody":
+            make_melody(seq, seqs.chord_pattern, length)
+        elif instrument == "drum":
+            make_drum(seq, ["bass_drum", "snare_drum", "hi_hat"])
 
 
 if __name__=="__main__":
