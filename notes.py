@@ -53,8 +53,10 @@ class Sequence:
         # Should not be needed, I think...
         self.sort_sequence()
 
+
         # Duration of the loop
-        loop_duration = end_time-start_time
+        loop_duration = (end_time-start_time)*self.beat_time
+        print(loop_duration)
 
         # Copy events before emptying the list
         all_events = self.events.copy()
@@ -64,7 +66,7 @@ class Sequence:
         for ev in all_events:
 
             # If events are in desired loop range, loop them over different times
-            if start_time <= ev.start < end_time:
+            if start_time*self.beat_time <= ev.start < end_time*self.beat_time:
                 for i in range(n):
                     self.events.append(
                         Event(
@@ -76,7 +78,7 @@ class Sequence:
                     )
 
             # If events are not part of loop, simply append them to event list
-            elif start_time + loop_duration * n < ev.start or ev.start < start_time:
+            elif start_time + loop_duration * n <= ev.start or ev.start < start_time:
                 self.events.append(ev)
 
 
