@@ -39,7 +39,6 @@ if __name__=="__main__":
     '''for ev in seqs.sequences[0].events:
         print("Strinking", ev.message, "at time", ev.start)
 '''
-    seqs.sequences[0].print_beat()
 
 
     

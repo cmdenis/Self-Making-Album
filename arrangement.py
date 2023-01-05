@@ -9,8 +9,11 @@ def make_arrangement():
     root = 0
     instruments = ["bass_drum"]
     length = 4 # Length of pattern in quarter beats
+    bpm = 120
 
     seqs = make_pattern(bpm, root, instruments)
+
+    seqs.loop_multitrack(2, 0, length)
 
 
 

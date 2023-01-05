@@ -183,6 +183,8 @@ class DrumSequence(Sequence):
             else:
                 print("░ Can't recognize drum sound! ░")
         print("║")
+
+        self.print_beat()
        
                     
     def print_beat(self):   
@@ -193,13 +195,9 @@ class DrumSequence(Sequence):
         to_print += "║  Tracks  ║ " + "  " + "1   2   3   4   1   2   3   4   1   2   3   4   1   2   3   4   "[0:16*self.nb_bars] + "\n"
         to_print += "╠══════════╩═══" + 16*self.nb_bars*"═" + "╗\n"
 
-        
-
-
         # Times of each 16th notes in sequence
         times = np.arange(0, self.nb_bars*4, 0.25)
       
-
         for ev in self.events:
             beats[ev.channel, (np.abs(times - ev.start/self.beat_time)).argmin()] = 1
 
