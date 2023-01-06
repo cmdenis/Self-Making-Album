@@ -184,8 +184,7 @@ class DrumSequence(Sequence):
         print("║")
 
         self.print_beat()
-       
-                    
+                 
     def print_beat(self):   
         '''Function to print out a grid presenting the sequence of notes that were played.'''
 
@@ -223,6 +222,9 @@ class DrumSequence(Sequence):
         to_print += "╚"+(name_cut+2+16*(int(m/16)+1))*"═" + "╝"
 
         print(to_print)
+
+    def play_sound(self):
+        
 
 
 

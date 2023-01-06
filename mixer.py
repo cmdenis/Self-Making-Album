@@ -54,14 +54,20 @@ class MultiSignal():
         self.signals = [Signal(sample_rate, duration, filename[0:-4]+"_"+name+".wav") for name in self.names]
 
     def mix_signals(self):
+        '''Method to mix the individual signals. To be refined'''
         # No mixing happening yet here
         for sig in self.signals[0:-1]:
-            self.signals[-1].signal += sig.signal/sig.rms
+            sig.signal = sig.signal/sig.rms
 
     def get_master(self):
-
+        '''Method to put all the signals in the master signal together.'''
         for sig in self.signals[0:-1]:
             self.signals[-1].signal += sig.signal
+
+    def play_sounds(self):
+        '''Method to have each sequence play the sounds link to its instrument.'''
+        for idx, seq in enumerate(self.seqs.sequences):
+            seq.play_sound(self.signals[idx])
 
 
 
