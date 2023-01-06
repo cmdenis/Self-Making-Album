@@ -1,3 +1,7 @@
 import numpy as np
+a = [1, 2, 3, 4]
 
-print(np.arange(0, 4.001, 0.5))
+for i in a:
+    i = 2
+
+print(a)
