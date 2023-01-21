@@ -22,4 +22,14 @@ I think I should not be too strict about this to be able to give rize to happy a
 
 So far the examples are very basic. This is mainly due to very rudimentary sound design and rythms. Here are some sound demos:
 
-[Demo 1](audio_test/demo_1)
+[Demo 1](https://github.com/cmdenis/Self-Making-Album/blob/main/audio_tests/demo_1.mp3)
+
+[Demo 2](https://github.com/cmdenis/Self-Making-Album/blob/main/audio_tests/demo_2.mp3)
+
+[Demo 3](https://github.com/cmdenis/Self-Making-Album/blob/main/audio_tests/demo_3.mp3)
+
+[Demo 4](https://github.com/cmdenis/Self-Making-Album/blob/main/audio_tests/demo_4.mp3)
+
+[Demo 5](https://github.com/cmdenis/Self-Making-Album/blob/main/audio_tests/demo_5.mp3)
+
+
