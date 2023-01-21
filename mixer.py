@@ -39,7 +39,7 @@ class MultiSignal():
 
     def save_master(self):
         self.get_master()
-        self.signals[-1].save_sound()
+        self.signals[-1].save_sound(mp3=True)
 
 
 

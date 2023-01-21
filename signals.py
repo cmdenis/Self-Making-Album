@@ -2,6 +2,8 @@ import numpy as np
 from scipy.io.wavfile import write
 from effects import hp_butterworth
 import scipy as sci
+from pydub import AudioSegment
+import os
 
 class Signal:
     '''Class that contains a signal'''
@@ -20,7 +22,7 @@ class Signal:
         new.signal = self.signal + x.signal
         return new
 
-    def save_sound(self):
+    def save_sound(self, mp3 = False):
 
 
 
@@ -38,6 +40,9 @@ class Signal:
 
         # Write signal to disk
         write(self.filename, self.save_samplerate, data.astype(np.int16))
+        if mp3 == True:
+            AudioSegment.from_wav(self.filename).export(self.filename[0:-4]+".mp3", format="mp3")
+            os.remove(self.filename)
 
     def rms(self):
         '''Method to get the rms of the signal for mixing purposes.'''

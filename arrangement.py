@@ -9,7 +9,7 @@ def make_arrangement():
     root = 0
     instruments = [DrumSequence]
     length = 4 # Length of pattern in quarter beats
-    bpm = 60
+    bpm = np.random.rand()*100+60
 
     seqs = make_pattern(bpm, root, instruments, 44100)
 
