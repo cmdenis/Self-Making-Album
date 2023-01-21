@@ -11,7 +11,7 @@ def make_arrangement():
     length = 4 # Length of pattern in quarter beats
     bpm = 60
 
-    seqs = make_pattern(bpm, root, instruments)
+    seqs = make_pattern(bpm, root, instruments, 44100)
 
     seqs.loop_multitrack(length, 0, 4)
 
@@ -27,6 +27,6 @@ def make_arrangement():
 if __name__ == "__main__":
     seqs = make_arrangement()
 
-    seqs.sequences[0].print_beat()
+    
 
 

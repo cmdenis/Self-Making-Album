@@ -8,7 +8,7 @@ from notes_maker import *
 from pydub import AudioSegment
 import os
 
-#np.random.seed(991ee929)
+#np.random.seed(π)
 
 # Initial parameters
 bpm = custom_norm(70, 200, 120, 100)

@@ -9,7 +9,7 @@ import numpy as np
 
 
 
-def make_pattern(bpm, root, instruments):
+def make_pattern(bpm, root, instruments, sample_rate):
 
     
     # Initializes the tracks
@@ -20,7 +20,8 @@ def make_pattern(bpm, root, instruments):
             np.array([0, 7, 5, 9]),
             np.array([0, 0, 0, 1]),
             np.array([2, 2, 2, 2])
-        )
+        ),
+        sample_rate
     )
 
     seqs.make_seqs()
@@ -33,12 +34,9 @@ if __name__=="__main__":
     seqs = make_pattern(
         120,
         0,
-        [DrumSequence]
+        [DrumSequence],
+        44100
     )
-
-    '''for ev in seqs.sequences[0].events:
-        print("Strinking", ev.message, "at time", ev.start)
-'''
 
 
     

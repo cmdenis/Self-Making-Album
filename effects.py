@@ -58,7 +58,7 @@ def lp_butterworth(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = F
 def hp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
 
     sig_fft = sci.fft.fft(signal.signal)    # FFT of signal
-    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.samplerate)  # Frequencies of fft
+    sig_freq = sci.fft.fftfreq(signal.length, 1/signal.sr)  # Frequencies of fft
 
     filt = 1- 1/np.sqrt(1 + (sig_freq/cutoff)**(2*order))  # Butterworth filter
 
@@ -108,7 +108,7 @@ def lowpass(signal, dry_wet = 1, filter_type = "gaussian"):
 
 
 
-def reverb(signal, length, dry_wet, new_ir = False):
+def reverb(signal, length, dry_wet, new_ir = True):
     '''
     Function to add reverb to signals.
     
@@ -120,10 +120,10 @@ def reverb(signal, length, dry_wet, new_ir = False):
     x = np.arange(signal.length)
 
     if new_ir == True:
-        kernel = np.exp(-x/(length*signal.samplerate))*np.random.randn(signal.length)
+        kernel = np.exp(-x/(length*signal.sr))*np.random.randn(signal.length)
         kernel = kernel/np.sum(kernel)
          
-        np.savetxt("impulse_responses/test_ir.txt", kernel)
+        #np.savetxt("impulse_responses/test_ir.txt", kernel)
     else:
         kernel = np.loadtxt("impulse_responses/test_ir.txt")
 

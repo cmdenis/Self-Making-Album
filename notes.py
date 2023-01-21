@@ -22,9 +22,9 @@ class Event:
 class Sequence:
     '''Class for the sequence of events.'''
 
-    def __init__(self, bpm, chord_pattern):
+    def __init__(self, bpm, chord_pattern, sr):
         self.bpm = bpm              # Beats per mins
-        #self.sr = sr                # Sample rate
+        self.sr = sr                # Sample rate
         self.beat_time = 60/bpm     # Duration of a whole note (in seconds)
         self.chord_pattern = chord_pattern
         self.events = []
@@ -56,7 +56,7 @@ class Sequence:
 
         # Duration of the loop
         loop_duration = (end_time-start_time)*self.beat_time
-        print(loop_duration)
+    
 
         # Copy events before emptying the list
         all_events = self.events.copy()
@@ -164,7 +164,7 @@ class ChordPattern:
 
 class Multitrack:
     '''Class to make many tracks/sequences.'''
-    def __init__(self, bpm, instruments, chord_pattern):
+    def __init__(self, bpm, instruments, chord_pattern, sample_rate):
         self.instruments = instruments      # List of classes
         self.bpm = bpm
         self.chord_pattern = chord_pattern
@@ -176,7 +176,8 @@ class Multitrack:
             self.sequences.append(
                 instrument(
                     bpm,
-                    chord_pattern
+                    chord_pattern,
+                    sample_rate
                 )
             )
         
