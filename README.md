@@ -17,3 +17,9 @@ I haven't decided yet if I'll build the system with a central seed so as to be a
 - The structure of the track (how many sections, what instruments are playing and that sort of thing)
 
 I think I should not be too strict about this to be able to give rize to happy accidents.
+
+## Audio Examples
+
+So far the examples are very basic. This is mainly due to very rudimentary sound design and rythms. Here are some sound demos:
+
+[Demo 1](audio_test/demo_1)
