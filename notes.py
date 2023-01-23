@@ -18,6 +18,15 @@ class Event:
         self.end = end                              # Time of end of sound
         self.channel = channel
         self.message = message
+    
+    def __str__(self) -> str:
+        string = "\nEvent:\n"
+        string += "\t Start: " + str(self.start)
+        string += "\t End: " + str(self.end)
+        string += "\t Length: " + str(self.end - self.start)
+        string += "\t Channel: " + str(self.channel)
+        string += "\t Message: " + str(self.message)
+        return string
 
 
 class Sequence:
