@@ -9,15 +9,16 @@ class ChordSequence(Sequence):
         
         self.name = "chords"
 
-        self.sound(
-            np.random.choice([SineSynth])
-        )
+        self.sound = np.random.choice([SineSynth])
 
     def hold_chord(self):
         '''Function to make a pattern of held down chords for one bar at a time.'''
 
-        # First make the notes in each chords
+        print("╠ Using 'hold_chord'...")
 
+
+
+        # First make the notes in each chords
         chord_selection = self.chord_pattern.chord_notes_selection(
             [48, 72], # Midi notes range
         )
@@ -36,10 +37,20 @@ class ChordSequence(Sequence):
                         channel=0
                     )
                 )
+        
+        print("╠═╗")
+        print("╚═╝")
 
     def make_seq(self):
         '''Method to make the sequence of notes'''
 
-        # Choose which chord making pattern to make
+        print("╔═══════════════════════╗")
+        print("║ Making Chord Sequence ║")
+        print("╠═══════════════════════╝")
+
+        # Choose which chord making procedure to make
+        method = np.random.choice([self.hold_chord])
+
+        method()
 
         

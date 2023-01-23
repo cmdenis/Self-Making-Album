@@ -168,10 +168,10 @@ class ChordPattern:
         to_play = []    # Array containing notes to play
 
         nb_notes = np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
-
-        for chord in self.chords:
+        
+        for nb, chord in zip(nb_notes, self.chords):
             to_play.append(
-                np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord >= note_range[1])], size = nb_notes, replace=False)
+                np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord >= note_range[1])], size = nb, replace=False)
             )
         return to_play
         

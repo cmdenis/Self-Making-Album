@@ -7,7 +7,7 @@ def make_arrangement():
     # In the future, I hope to add more parameters, 
     # and to be able to cut down entries and make more than one pattern and that sort of thing.
     root = 0
-    instruments = [DrumSequence]
+    instruments = [DrumSequence, ChordSequence]
     length = 4 # Length of pattern in quarter beats
     bpm = np.random.rand()*100+60
 
@@ -26,6 +26,8 @@ def make_arrangement():
 
 if __name__ == "__main__":
     seqs = make_arrangement()
+
+    print(seqs.sequences[1].events)
 
     
 
