@@ -53,7 +53,7 @@ if __name__ == "__main__":
     max_time = seqs.last_time()
 
     # Instantiate signal
-    sigs = MultiSignal(seqs, 44100, "audio_tests/drum_test.wav", max_time + 2)
+    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 2)
 
     # Synthesize sound
     sigs.play_sounds()
