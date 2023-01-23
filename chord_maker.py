@@ -1,6 +1,8 @@
 from notes import Sequence, Event
 import numpy as np
 from synth import SineSynth
+from effects import reverb, waveshaper, custom_norm
+
 
 
 class ChordSequence(Sequence):
@@ -22,12 +24,16 @@ class ChordSequence(Sequence):
         chord_selection = self.chord_pattern.chord_notes_selection(
             [48, 72], # Midi notes range
         )
+        #print(chord_selection)
 
         lengths = self.chord_pattern.lengths        # Lengths of each chords
-        starts = np.cumsum(lengths - lengths[0])    # Time of start of each chords
-        ends = np.cumsum(lengths)                   # Time of end of each chords
+        starts = (np.cumsum(lengths)- lengths[0])*self.beat_time     # Time of start of each chords
+        ends = np.cumsum(lengths)*self.beat_time                 # Time of end of each chords
 
+        #print(starts)
         for start, end, chord in zip(starts, ends, chord_selection):
+            #print(chord)
+            #print(start)
             for note in chord:
                 self.events.append(
                     Event(
@@ -52,5 +58,25 @@ class ChordSequence(Sequence):
         method = np.random.choice([self.hold_chord])
 
         method()
+
+    def play_sound(self, sig):
+        '''Function to synthesize sound'''
+        print("🎹 Synthesizing synth sound...")
+
+        self.sound(self.bpm, self, sig).play()
+
+
+        # Adding reverb
+        if 0.1 > np.random.rand():
+            reverb(
+                sig,                            # Signal
+                custom_norm(0.01, 4, 0.5, 0.5), # Length of reverb
+                custom_norm(0, 1, 0.3, 0.2)     # Dry/Wet Mix
+            )
+
+        # Adding waveshaper
+        #waveshaper(sig, intensity=custom_norm(3, 8, 4, 1))
+
+        sig.signal += sig.signal / sig.LUFS()
 
         

@@ -15,7 +15,7 @@ class Signal:
         self.save_samplerate = save_samplerate  # Sample rate of saved file
 
         self.signal = np.zeros(samplerate*self.duration) # Signal
-        self.length = duration * samplerate
+        self.length = self.duration * samplerate
     
     def __add__(self, x):
         new = Signal(self.sr, self.duration, self.filename)

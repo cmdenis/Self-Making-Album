@@ -20,12 +20,14 @@ class Event:
         self.message = message
     
     def __str__(self) -> str:
-        string = "\nEvent:\n"
-        string += "\t Start: " + str(self.start)
-        string += "\t End: " + str(self.end)
-        string += "\t Length: " + str(self.end - self.start)
-        string += "\t Channel: " + str(self.channel)
-        string += "\t Message: " + str(self.message)
+        string = "\nEvent:"
+        string += "\n\t MIDI Note: " + str(self.midi_note)
+        string += "\n\t Pitch: " + str(self.pitch) + " Hz"
+        string += "\n\t Start: " + str(self.start)
+        string += "\n\t End: " + str(self.end)
+        string += "\n\t Length: " + str(self.end - self.start)
+        string += "\n\t Channel: " + str(self.channel)
+        string += "\n\t Message: " + str(self.message)
         return string
 
 
@@ -78,6 +80,12 @@ class Sequence:
             # If events are in desired loop range, loop them over different times
             if start_time*self.beat_time <= ev.start < end_time*self.beat_time:
                 for i in range(n):
+                    '''print(Event(
+                            ev.midi_note,
+                            ev.start + i * loop_duration,
+                            ev.end + i * loop_duration,
+                            ev.channel
+                        ))'''
                     self.events.append(
                         Event(
                             ev.midi_note,
@@ -89,6 +97,8 @@ class Sequence:
 
             # If events are not part of loop, simply append them to event list
             elif start_time + loop_duration * n <= ev.start or ev.start < start_time:
+                #print("here")
+                #print("note:", ev.midi_note)
                 self.events.append(ev)
 
 
@@ -176,11 +186,11 @@ class ChordPattern:
         '''Method that selects notes to be played in a chord'''
         to_play = []    # Array containing notes to play
 
-        nb_notes = np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
+        nb_notes = np.array([3, 3, 3, 3])#np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
         
         for nb, chord in zip(nb_notes, self.chords):
             to_play.append(
-                np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord >= note_range[1])], size = nb, replace=False)
+                np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord <= note_range[1])], size = nb, replace=False)
             )
         return to_play
         

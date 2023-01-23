@@ -18,10 +18,10 @@ class SineSynth(Synth):
         super().__init__(bpm, seq, sig)
         self.name = "sine_synth"
 
-    def sine_synth(self):
+    def play(self):
         # Loop over events in sequence
         self.print_name()
-        for ev in self.seq:
+        for ev in self.seq.events:
             # Creating a sine wave
             samples = (ev.end - ev.start) * self.sig.sr
 
@@ -37,7 +37,7 @@ class SawtoothSynth(Synth):
         super().__init__(bpm, seq, sig)
         self.name = "sawtooth_synth"
 
-    def sine_synth(self):
+    def play(self):
         # Loop over events in sequence
         self.print_name()
         for ev in self.seq:
