@@ -182,7 +182,7 @@ class ChordPattern:
         "Transpose chord pattern by amount in semi-tones."
         self.roots = np.mod(self.roots+shift, 12)
 
-    def chord_notes_selection(self, note_range, min_notes = 3, max_notes = 5):
+    def select_scattered(self, note_range, min_notes = 3, max_notes = 5):
         '''Method that selects notes to be played in a chord'''
         to_play = []    # Array containing notes to play
 

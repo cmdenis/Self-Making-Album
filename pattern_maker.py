@@ -17,8 +17,8 @@ def make_pattern(bpm, root, instruments, sample_rate):
         bpm, 
         instruments, 
         ChordPattern(
-            np.array([0, 7, 5, 9]),
-            np.array([0, 0, 0, 1]),
+            np.array([0, 9, 5, 7]) + np.random.randint(11),
+            np.array([0, 1, 0, 0]),
             np.array([2, 2, 2, 2])
         ),
         sample_rate
