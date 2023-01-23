@@ -55,7 +55,6 @@ class PercussionInstrumentSequence(Sequence):
             # Add sound to signal
             sig.signal += np.concatenate((t0, t1, t2, buffer))[:sig.sr*sig.duration]
 
-
 class BassDrumSequence(PercussionInstrumentSequence):
     def __init__(self, bpm, chord_pattern, sr):
         super().__init__(bpm, chord_pattern, sr)

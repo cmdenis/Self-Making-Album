@@ -1,4 +1,5 @@
 import numpy as np
+import random as rand
 
 
 class Event:
@@ -89,8 +90,9 @@ class ChordPattern:
 
         self.roots = roots      # Array with roots of chords used
         #self.chords = chords    # Array with chords used
-        self.chords = []
+        self.chords = []    # Will be filled with all the notes for the chords
         self.lengths = lengths  # Array with lengths of chords
+        self.nb_chords = len(chords)
         
         # Create chords
         self.C = np.array([0, 4, 7])                # X
@@ -160,6 +162,18 @@ class ChordPattern:
     def transpose(self, shift):
         "Transpose chord pattern by amount in semi-tones."
         self.roots = np.mod(self.roots+shift, 12)
+
+    def chord_notes_selection(self, note_range, min_notes = 3, max_notes = 5):
+        '''Method that selects notes to be played in a chord'''
+        to_play = []    # Array containing notes to play
+
+        nb_notes = np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
+
+        for chord in self.chords:
+            to_play.append(
+                np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord >= note_range[1])], size = nb_notes, replace=False)
+            )
+        return to_play
         
 
 class Multitrack:
@@ -188,6 +202,16 @@ class Multitrack:
         '''Method to create sequence for all sequences in the multitrack.'''
         for seq in self.sequences:
             seq.make_seq()
+
+    def last_time(self):
+        '''Method to get final released note. Is used when trying to figure out how long the audio file should be.'''
+        max_time = 0
+        for seq in self.sequences:
+            for ev in seq.events:
+                if max(ev.start, ev.end) > max_time:
+                    max_time = max(ev.start, ev.end)
+        return max_time
+
 
     def loop_multitrack(self, n, start_time, end_time):
         '''Method to loop a section n times after it has occured.

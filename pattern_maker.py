@@ -34,7 +34,7 @@ if __name__=="__main__":
     seqs = make_pattern(
         120,
         0,
-        [DrumSequence],
+        [DrumSequence, ChordSequence],
         44100
     )
 

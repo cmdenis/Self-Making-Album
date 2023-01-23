@@ -48,12 +48,17 @@ class MultiSignal():
 if __name__ == "__main__":
 
 
+    # Make note data
     seqs = make_arrangement()
+    max_time = seqs.last_time()
 
-    sigs = MultiSignal(seqs, 44100, "audio_tests/drum_test.wav", 20)
+    # Instantiate signal
+    sigs = MultiSignal(seqs, 44100, "audio_tests/drum_test.wav", max_time + 2)
 
+    # Synthesize sound
     sigs.play_sounds()
 
+    # Save sound
     sigs.save_master()
 
 
