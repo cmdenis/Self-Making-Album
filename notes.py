@@ -170,19 +170,19 @@ class ChordPattern:
         # Each element of the list contains all the possible notes linked to a chord
         # Will have to be bounded when used with the different makers
         for i, j in zip(chords, roots):
-
+            chord_length = len(self.chord_list[i])
             # For each chord and root this simply makes a vector with all the possible notes
             self.chords.append(np.unique(np.ndarray.flatten(
                 np.outer(
                     np.mod(self.chord_list[i]+j, 12), np.ones(10)
-                ) + np.outer(np.ones(3), np.arange(10))*12
+                ) + np.outer(np.ones(chord_length), np.arange(10))*12
             )))
 
     def transpose(self, shift):
         "Transpose chord pattern by amount in semi-tones."
         self.roots = np.mod(self.roots+shift, 12)
 
-    def select_scattered(self, note_range, min_notes = 3, max_notes = 5):
+    def select_note_scattered(self, note_range, min_notes = 3, max_notes = 5):
         '''Method that selects notes to be played in a chord'''
         to_play = []    # Array containing notes to play
 
@@ -193,6 +193,28 @@ class ChordPattern:
                 np.random.choice(chord[np.logical_and(note_range[0] <= chord, chord <= note_range[1])], size = nb, replace=False)
             )
         return to_play
+
+    def select_note_range(self, note_range):
+        '''Play all notes in  range'''
+        to_play = []    # Array containing notes to play
+        
+        for chord in self.chords:
+            to_play.append(
+                chord[np.logical_and(note_range[0] <= chord, chord <= note_range[1])]
+            )
+        return to_play
+
+    def get_chord(self, note_range):
+        '''Selects a method for chord generation'''
+        method = np.random.choice(
+            [
+                self.select_note_range,
+                self.select_note_scattered
+            ]
+        )
+
+        return method(note_range)
+
         
 
 class Multitrack:

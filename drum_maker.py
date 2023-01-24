@@ -261,44 +261,46 @@ class DrumSequence(Sequence):
               
     def print_beat(self):   
         '''Function to print out a grid presenting the sequence of notes that were played.'''
+        try:
+            # Max beat
+            starts = [ev.start for ev in self.events]
+            m = int((np.max(starts))/self.beat_time*4)
 
-        # Max beat
-        starts = [ev.start for ev in self.events]
-        m = int((np.max(starts))/self.beat_time*4)
 
+            beats = np.zeros((len(self.tracks), 16*(int(m/16)+1)))
+            to_print =  "╠══════════╗\n"
+            to_print += "║  Tracks  ║ " + "  " + ("1---2---3---4---"*(int(m/16)+1)) + "\n"
+            to_print += "╠══════════╩═══" + 16*(int(m/16)+1)*"═" + "╗\n"
 
-        beats = np.zeros((len(self.tracks), 16*(int(m/16)+1)))
-        to_print =  "╠══════════╗\n"
-        to_print += "║  Tracks  ║ " + "  " + ("1---2---3---4---"*(int(m/16)+1)) + "\n"
-        to_print += "╠══════════╩═══" + 16*(int(m/16)+1)*"═" + "╗\n"
+            # Times of each 16th notes in sequence
+            times = np.arange(0, 16*(int(m/16)+1), 0.25)
+        
+            for ev in self.events:
+                beats[ev.channel, (np.abs(times - ev.start/self.beat_time)).argmin()] = 1
 
-        # Times of each 16th notes in sequence
-        times = np.arange(0, 16*(int(m/16)+1), 0.25)
-      
-        for ev in self.events:
-            beats[ev.channel, (np.abs(times - ev.start/self.beat_time)).argmin()] = 1
+            for idx, track in enumerate(self.tracks):
+    
+                name_cut = 12 
+                heading = track.name
+                heading = heading.ljust(name_cut)
+                heading = heading[0:name_cut]
+                to_print += ("║" + heading + ": ")
 
-        for idx, track in enumerate(self.tracks):
-  
-            name_cut = 12 
-            heading = track.name
-            heading = heading.ljust(name_cut)
-            heading = heading[0:name_cut]
-            to_print += ("║" + heading + ": ")
+                for strike in beats[idx]:
+                    if strike == 1:
+                        to_print += "█"
+                    else:
+                        to_print += " "
+                to_print += "║\n"
 
-            for strike in beats[idx]:
-                if strike == 1:
-                    to_print += "█"
-                else:
-                    to_print += " "
-            to_print += "║\n"
+            to_print += "╚"+(name_cut+2+16*(int(m/16)+1))*"═" + "╝"
 
-        to_print += "╚"+(name_cut+2+16*(int(m/16)+1))*"═" + "╝"
-
-        print(to_print)
+            print(to_print)
+        except:
+            print("Problem with printing beat... (probably very exceptional beat arriving exactly on the last beat)")
 
     def play_sound(self, sig):
-        print("🥁 Synthesizing drum sound...")
+        print("\n==== 🥁 Synthesizing drum sound... ====")
 
         for track in self.tracks:
             # Making drum signal

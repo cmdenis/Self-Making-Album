@@ -36,7 +36,7 @@ class Signal:
         #plt.plot(data[0:10])
         #plt.show()
         # Normalizing and Making sure signal has correct amplitude
-        data = np.iinfo(np.int16).max * data / np.max(data) / 10 
+        data = np.iinfo(np.int16).max * data / np.max(data) 
 
         # Write signal to disk
         write(self.filename, self.save_samplerate, data.astype(np.int16))

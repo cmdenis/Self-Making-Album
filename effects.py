@@ -31,7 +31,7 @@ def spectrum(signal, window_func = np.cos):
 
 
 def lp_butterworth(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = False):
-    print("Applying 'lp_butterworth' filter...")
+    #print("Applying 'lp_butterworth' filter...")
     sig_fft = sci.fft.fft(signal)    # FFT of signal
     sig_freq = sci.fft.fftfreq(len(signal), 1/samplerate)  # Frequencies of fft
 

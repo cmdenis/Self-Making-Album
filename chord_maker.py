@@ -1,6 +1,6 @@
 from notes import Sequence, Event
 import numpy as np
-from synth import SineSynth, SawtoothSynth
+from synth import SineSynth, SawtoothSynth, SubstractiveSynth1
 from effects import reverb, waveshaper, custom_norm
 
 
@@ -11,17 +11,15 @@ class ChordSequence(Sequence):
         
         self.name = "chords"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth])
+        self.sound = np.random.choice([SineSynth, SawtoothSynth, SubstractiveSynth1])
 
     def hold_chord(self):
         '''Function to make a pattern of held down chords for one bar at a time.'''
 
         print("╠ Using 'hold_chord'...")
 
-
-
         # First make the notes in each chords
-        chord_selection = self.chord_pattern.select_scattered(
+        chord_selection = self.chord_pattern.get_chord(
             [48, 72], # Midi notes range
         )
         #print(chord_selection)
@@ -61,7 +59,7 @@ class ChordSequence(Sequence):
 
     def play_sound(self, sig):
         '''Function to synthesize sound'''
-        print("🎹 Synthesizing synth sound...")
+        print("\n==== 🎹 Synthesizing synth sound... ====")
 
         self.sound(self.bpm, self, sig).play()
 

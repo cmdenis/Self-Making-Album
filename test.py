@@ -1,7 +1,7 @@
 import numpy as np
-a = [1, 2, 3, 4]
-
-for i in a:
-    i = 2
+a = np.outer(
+    np.array([1, 2, 3]),
+    np.outer(np.ones(3), np.arange(10))*12
+)
 
 print(a)

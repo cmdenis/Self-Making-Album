@@ -45,7 +45,7 @@ class BassDrumSound(DrumSound):
             custom_norm(20, 20000, 40, 20),         # p[0]: Pitch (Hz)
             custom_norm(0.9, 15, 6, 2),             # p[1]: Pitch mod
             custom_norm(0.005, 1, 0.03, 0.03),      # p[2]: Pitch decay (s)
-            custom_norm(0.002, 3, 0.2, 1.5),        # p[3]: Amp decay (s)
+            custom_norm(0.002, 3, 0.2, 0.5),        # p[3]: Amp decay (s)
         ]
     
     def make_sample(self, x, p):
