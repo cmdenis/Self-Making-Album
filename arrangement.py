@@ -11,12 +11,14 @@ def make_arrangement():
     # and to be able to cut down entries and make more than one pattern and that sort of thing.
     root = 0
     instruments = [ChordSequence, BassSequence, DrumSequence]
-    length = 2 # Length of pattern in quarter beats
     bpm = np.random.rand()*100+40
 
     seqs = make_pattern(bpm, root, instruments, 44100)
 
-    seqs.loop_multitrack(length, 0, 8)
+    length = seqs.chord_pattern.pat_length # Length of pattern in quarter beats
+
+
+    seqs.loop_multitrack(2, 0, length)
 
     return seqs
 

@@ -35,6 +35,7 @@ class MultiSignal():
     def play_sounds(self):
         '''Method to have each sequence play the sounds link to its instrument.'''
         for idx, seq in enumerate(self.seqs.sequences):
+            
             seq.play_sound(self.signals[idx])
 
     def save_master(self):
@@ -50,11 +51,16 @@ if __name__ == "__main__":
 
     # Make note data
     seqs = make_arrangement()
+
+
     max_time = seqs.last_time()
+
 
     # Instantiate signal
     sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 2)
 
+
+    
     # Synthesize sound
     sigs.play_sounds()
 

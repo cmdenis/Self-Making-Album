@@ -40,6 +40,7 @@ class PercussionInstrumentSequence(Sequence):
 
         # Loop over events in sequence
         for ev in self.events:
+
             # Creating a sine wave
             #print("Starting sample at:", ev.start)
             t0 = np.zeros(int(ev.start*sig.sr))                       # Zeroes before start of sound
@@ -226,10 +227,9 @@ class DrumSequence(Sequence):
         self.tracks = [
             BassDrumSequence(self.bpm, self.chord_pattern, self.sr), 
             SnareDrumSequence(self.bpm, self.chord_pattern, self.sr), 
-            HihatSequence(self.bpm, self.chord_pattern, self.sr)
+            #HihatSequence(self.bpm, self.chord_pattern, self.sr)
         ] # Can be randomized here in the future
     
-
     def make_seq(self):
         '''Function to make 4/4 drum tracks.'''
         print("╔══════════════╗")
@@ -244,12 +244,19 @@ class DrumSequence(Sequence):
         for track in self.tracks:    # Iterating over the different drum sounds
             # Make sequence
             track.make_seq(0, 4*nb_bars)
+            track.loop_sequence((self.chord_pattern.pat_length)/(4*nb_bars), 0, 4*nb_bars)
+
             
         print("║")
 
         # Add events to overall drum sequence
         self.make_bus_events()
         self.print_beat()
+
+    def loop_sequence(self, n, start_time, end_time):
+        '''Overriding loop_sequence for DrumSequence because need to loop individual sub-sequences'''
+        for track in self.tracks:
+            track.loop_sequence(n, start_time, end_time)
 
     def make_bus_events(self):
         '''Add all events from individual tracks to overall drum events'''
@@ -301,6 +308,7 @@ class DrumSequence(Sequence):
 
     def play_sound(self, sig):
         print("\n==== 🥁 Synthesizing drum sound... ====")
+
 
         for track in self.tracks:
             # Making drum signal

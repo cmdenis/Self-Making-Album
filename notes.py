@@ -61,7 +61,6 @@ class Sequence:
     def loop_sequence(self, n, start_time, end_time):
         '''Method to loop a section n times after it has occured.
         This will overwrite whatever occurs in the looping time region.'''
-
         # Should not be needed, I think...
         self.sort_sequence()
 
@@ -77,23 +76,32 @@ class Sequence:
         # Iterate over events
         for ev in all_events:
 
+
             # If events are in desired loop range, loop them over different times
             if start_time*self.beat_time <= ev.start < end_time*self.beat_time:
-                for i in range(n):
+                
+                for i in range(int(np.ceil(n))):
                     '''print(Event(
                             ev.midi_note,
                             ev.start + i * loop_duration,
                             ev.end + i * loop_duration,
                             ev.channel
                         ))'''
-                    self.events.append(
-                        Event(
-                            ev.midi_note,
-                            ev.start + i * loop_duration,
-                            ev.end + i * loop_duration,
-                            ev.channel
+                    # Since looping over ceil of n
+                    # Must make sure the event actually happens
+                    # within n before appending it
+                    if ev.start + i * loop_duration < n*loop_duration:
+                        
+                        self.events.append(
+                            Event(
+                                ev.midi_note,
+                                ev.start + i * loop_duration,
+                                ev.end + i * loop_duration,
+                                ev.channel,
+                                ev.message
+                            )
                         )
-                    )
+                
 
             # If events are not part of loop, simply append them to event list
             elif start_time + loop_duration * n <= ev.start or ev.start < start_time:
@@ -112,6 +120,7 @@ class ChordPattern:
         self.chords = []    # Will be filled with all the notes for the chords
         self.lengths = lengths  # Array with lengths of chords
         self.nb_chords = len(chords)
+        self.pat_length = np.sum(lengths)
         
         # Create chords
         self.C = np.array([0, 4, 7])                # X
