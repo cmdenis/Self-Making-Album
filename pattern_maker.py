@@ -34,7 +34,7 @@ def hard_coded_patterns():
 
 def completly_random_patterns():
     '''Makes random chord pattern'''
-    print("Using Random Pattern Generator")
+    print("Using Random Pattern Generator:")
     length_prob = np.array([1, 5, 10, 20, 10, 8])
     pat_length = np.random.choice([1, 2, 3, 4, 5, 6], p = length_prob/np.sum(length_prob))
     roots = np.mod(
@@ -51,9 +51,10 @@ def completly_random_patterns():
 
     lengths = np.random.choice([4, 2], size=pat_length, p = [0.95, 0.05])
 
-    print(roots)
-    print(chords)
-    print(lengths)
+    print("Roots:", roots)
+    print("Chords:", chords)
+    print("Lengths:", lengths)
+    print()
     return ChordPattern(roots, chords, lengths)
    
 

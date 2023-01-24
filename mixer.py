@@ -48,7 +48,7 @@ class MultiSignal():
 
 if __name__ == "__main__":
 
-    np.random.seed(5595)
+    np.random.seed(554509345)
     # Make note data
     seqs = make_arrangement()
 
