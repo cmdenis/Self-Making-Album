@@ -1,7 +1,6 @@
 import numpy as np
-a = np.outer(
-    np.array([1, 2, 3]),
-    np.outer(np.ones(3), np.arange(10))*12
-)
+a = np.array([1, 2, 3, 4])
+b = np.array([4, 3, 2])
 
-print(a)
+for i, j in zip(a, b):
+    print(i, j)

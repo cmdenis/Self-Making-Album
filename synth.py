@@ -90,7 +90,7 @@ class SubstractiveSynth1(Synth):
 
         # Filter
         # Shoudl implement an envelope enventually
-        self.cutoff = custom_norm(300, 20000, 10000, 5000)
+        self.cutoff = custom_norm(300, 20000, 10000, 10000)
 
         # OSC 1
         self.wave_1 = np.random.choice(

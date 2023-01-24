@@ -162,7 +162,7 @@ class HihatSequence(PercussionInstrumentSequence):
         self.choke = False
 
         # Instantiates bass drum sample
-        self.sample = HihatSound(1, self.sr)    
+        self.sample = HihatSound(0.1, self.sr)    
 
     def make_seq(self, start_time, end_time, extra_note_scaling = 0.25, midi_note = 0):
         '''Method to make hi-hat sequence'''
@@ -227,8 +227,24 @@ class DrumSequence(Sequence):
         self.tracks = [
             BassDrumSequence(self.bpm, self.chord_pattern, self.sr), 
             SnareDrumSequence(self.bpm, self.chord_pattern, self.sr), 
-            #HihatSequence(self.bpm, self.chord_pattern, self.sr)
-        ] # Can be randomized here in the future
+            HihatSequence(self.bpm, self.chord_pattern, self.sr)
+        ] 
+
+        '''self.tracks = list([
+            np.random.choice(
+                [
+                    BassDrumSequence(self.bpm, self.chord_pattern, self.sr), 
+                    SnareDrumSequence(self.bpm, self.chord_pattern, self.sr), 
+                    HihatSequence(self.bpm, self.chord_pattern, self.sr)
+                ],
+                size = 3,
+                p = [0.4, 0.3, 0.3]
+            )
+        ])'''
+
+
+        
+        # Can be randomized here in the future
     
     def make_seq(self):
         '''Function to make 4/4 drum tracks.'''

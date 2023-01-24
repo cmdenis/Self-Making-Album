@@ -27,6 +27,7 @@ class Signal:
 
 
         # Interpolate data to make sampling frequencies match
+        print("\n==== 💾 Saving to disk... ====")
         print("Original signal is at", self.sr, "Hz sampling rate.")
         print("Saving signal at", self.save_samplerate, "Hz sampling rate.")
         og_smp = np.arange(self.duration*self.sr)
@@ -36,7 +37,7 @@ class Signal:
         #plt.plot(data[0:10])
         #plt.show()
         # Normalizing and Making sure signal has correct amplitude
-        data = np.iinfo(np.int16).max * data / np.max(data) 
+        data = np.iinfo(np.int16).max * data / np.max(data) /2
 
         # Write signal to disk
         write(self.filename, self.save_samplerate, data.astype(np.int16))

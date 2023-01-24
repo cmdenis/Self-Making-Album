@@ -48,9 +48,12 @@ class MultiSignal():
 
 if __name__ == "__main__":
 
-
+    np.random.seed(5595)
     # Make note data
     seqs = make_arrangement()
+
+    #for i in seqs.sequences[0].events:
+    #    print(i)
 
 
     max_time = seqs.last_time()

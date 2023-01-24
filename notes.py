@@ -194,8 +194,8 @@ class ChordPattern:
     def select_note_scattered(self, note_range, min_notes = 3, max_notes = 5):
         '''Method that selects notes to be played in a chord'''
         to_play = []    # Array containing notes to play
-
-        nb_notes = np.array([3, 3, 3, 3])#np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
+        print("╠ Using 'select_note_scattered'...")
+        nb_notes = np.random.randint(low = min_notes, high=max_notes, size = self.nb_chords)
         
         for nb, chord in zip(nb_notes, self.chords):
             to_play.append(
@@ -206,7 +206,7 @@ class ChordPattern:
     def select_note_range(self, note_range):
         '''Play all notes in  range'''
         to_play = []    # Array containing notes to play
-        
+        print("╠ Using 'select_note_range'...")
         for chord in self.chords:
             to_play.append(
                 chord[np.logical_and(note_range[0] <= chord, chord <= note_range[1])]
@@ -219,7 +219,8 @@ class ChordPattern:
             [
                 self.select_note_range,
                 self.select_note_scattered
-            ]
+            ],
+            #p = [0.75, 0.25]
         )
 
         return method(note_range)

@@ -5,7 +5,7 @@ from bass_maker import BassSequence
 from chord_maker import ChordSequence
 import numpy as np
 
-np.random.seed(2)
+#np.random.seed(2)
 
 def hard_coded_patterns():
     '''User defined chord progression to be randomly selected from.'''
@@ -17,14 +17,14 @@ def hard_coded_patterns():
             np.array([2, 2, 2, 2])
         ),
         ChordPattern(
-            np.mod(np.array([0, 9, 5, 7]) + np.random.randint(11), 12),
-            np.array([0, 1, 0, 0]),
-            np.array([2, 2, 2, 2])
+            np.mod(np.array([0, 5, 7]) + np.random.randint(11), 12),
+            np.array([0, 0, 0]),
+            np.array([4, 4, 8])
         ),
         ChordPattern(
-            np.mod(np.array([0, 9, 5, 7]) + np.random.randint(11), 12),
-            np.array([0, 1, 0, 0]),
-            np.array([2, 2, 2, 2])
+            np.mod(np.array([0, 5, 7, 2]) + np.random.randint(11), 12),
+            np.array([0, 0, 0, 0]),
+            np.array([4, 4, 4, 4])
         )
     ]
 

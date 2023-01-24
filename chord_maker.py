@@ -11,7 +11,7 @@ class ChordSequence(Sequence):
         
         self.name = "chords"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth, SubstractiveSynth1])
+        self.sound = np.random.choice([SineSynth, SawtoothSynth, SubstractiveSynth1], p = [0.2, 0.2, 0.6])
 
     def hold_chord(self):
         '''Function to make a pattern of held down chords for one bar at a time.'''
@@ -22,7 +22,7 @@ class ChordSequence(Sequence):
         chord_selection = self.chord_pattern.get_chord(
             [48, 72], # Midi notes range
         )
-        #print(chord_selection)
+        print(chord_selection)
 
         lengths = self.chord_pattern.lengths        # Lengths of each chords
         starts = (np.cumsum(lengths)- lengths[0])*self.beat_time     # Time of start of each chords
