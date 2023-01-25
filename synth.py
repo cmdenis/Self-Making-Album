@@ -6,17 +6,21 @@ import matplotlib.pyplot as plt
 def ADSR(x, a, d, s, r, show_plot = False):
     '''Function to generate an ADSR enveloppe on data x'''
     if True: #x[-1] >= (a + d + r): In the future could possibly make this quicker by checking if signal is shorter then a,d,r
+        
         attack = lambda x: x/a
         decay = lambda x: (a + d - a*s)/d - x*(1-s)/d
         sustain = lambda x: s
-        pre_rel_x = x[x < (x[-1] - r)]
+        pre_rel_x = np.append(0, x[x < (x[-1] - r)])    # Appending a 0 in the begining in case the duration is 0
         pre_rel = np.piecewise(
             pre_rel_x, 
             [pre_rel_x < a, np.logical_and(a <= pre_rel_x, pre_rel_x < a+d), a+d<=pre_rel_x],
             [attack, decay, sustain]
         )
 
-        release = x[-1]*pre_rel[-1]/r - pre_rel[-1]/r*x[x[-1] - r <= x]
+        #print(pre_rel_x)
+        
+        release = (x[-1]*pre_rel[-1]/r - pre_rel[-1]/r*x[x[-1] - r <= x])[1:]
+        
 
         if show_plot == True:
             plt.plot(np.concatenate((pre_rel, release)))
@@ -32,7 +36,6 @@ class Synth:
 
     def print_name(self):
         print("Using", self.name, "generator...")
-
 
 class SineSynth(Synth):
     def __init__(self, bpm, seq, sig) -> None:
@@ -113,7 +116,6 @@ class SubstractiveSynth1(Synth):
             print("OSC 1 Wave:", self.wave_1)
             print("OSC 2 Detune:", self.pitch_2)
             print("OSC 2 Wave:", self.wave_2)
-
 
     def play(self):
         print("Using 'substractive_synth_1' generator...")

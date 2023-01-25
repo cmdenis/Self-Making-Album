@@ -24,7 +24,7 @@ class BassSequence(Sequence):
        
 
         lengths = self.chord_pattern.lengths                        # Lengths of each note
-        starts = (np.cumsum(lengths)- lengths[0])*self.beat_time    # Time of start of each chords
+        starts = (np.cumsum(np.append(0, np.delete(lengths, -1))))*self.beat_time    # Time of start of each chords
         ends = np.cumsum(lengths)*self.beat_time                    # Time of end of each chords
 
         #print(starts)

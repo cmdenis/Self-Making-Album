@@ -1,6 +1,6 @@
 import numpy as np
-a = np.array([1, 2, 3, 4])
-b = np.array([4, 3, 2])
+a = [1, 2, 3, 4, 5, 6, 7]
+a = np.append(0, np.delete(a, -1))
 
-for i, j in zip(a, b):
-    print(i, j)
+
+print(a)

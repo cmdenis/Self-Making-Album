@@ -22,10 +22,10 @@ class ChordSequence(Sequence):
         chord_selection = self.chord_pattern.get_chord(
             [48, 72], # Midi notes range
         )
-        print(chord_selection)
+        #print(chord_selection)
 
         lengths = self.chord_pattern.lengths        # Lengths of each chords
-        starts = (np.cumsum(lengths)- lengths[0])*self.beat_time     # Time of start of each chords
+        starts = (np.cumsum(np.append(0, np.delete(lengths, -1))))*self.beat_time     # Time of start of each chords
         ends = np.cumsum(lengths)*self.beat_time                 # Time of end of each chords
 
         #print(starts)

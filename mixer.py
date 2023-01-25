@@ -47,8 +47,9 @@ class MultiSignal():
 
 
 if __name__ == "__main__":
-
-    np.random.seed(554509345)
+    s = np.random.randint(0, 100000000)
+    np.random.seed(s)
+    print("Using Seed:", s, "\n")
     # Make note data
     seqs = make_arrangement()
 
@@ -60,7 +61,7 @@ if __name__ == "__main__":
 
 
     # Instantiate signal
-    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 2)
+    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 20)
 
 
     
