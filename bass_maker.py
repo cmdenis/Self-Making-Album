@@ -1,6 +1,6 @@
 from notes import Sequence, Event
 import numpy as np
-from synth import SineSynth, SawtoothSynth, SubstractiveSynth1
+from synth import SineSynth, SawtoothSynth, BassSubstractiveSynth1
 from effects import reverb, waveshaper, custom_norm
 
 class BassSequence(Sequence):
@@ -10,7 +10,7 @@ class BassSequence(Sequence):
         
         self.name = "bass"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth, SubstractiveSynth1])
+        self.sound = np.random.choice([SineSynth, SawtoothSynth, BassSubstractiveSynth1])
 
     def hold_bass(self):
         '''Function to make a pattern of held down bass line'''

@@ -136,4 +136,130 @@ class SubstractiveSynth1(Synth):
             buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
             self.sig.signal += np.concatenate((t0, t1, t2, buffer))[:self.sig.sr*self.sig.duration]
-            
+
+
+
+
+class BassSubstractiveSynth1(SubstractiveSynth1):
+    def __init__(self, bpm, seq, sig) -> None:
+        super().__init__(bpm, seq, sig)   
+
+        self.name = "bass_substractive_synth1"
+        
+        # Synth parameters
+        # a, b, mean, sigma
+
+        # Amp enveloppe
+        self.amp_A = custom_norm(0, 2, 0.05, 0.1)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.8, 0.1)
+        self.amp_R = custom_norm(0, 3, 0.05, 0.2)
+
+        # Filter
+        # Shoudl implement an envelope enventually
+        self.cutoff = custom_norm(300, 20000, 10000, 10000)
+
+        # OSC 1
+        self.wave_1 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_1 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        # OSC 2
+        self.wave_2 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_2 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        if True:
+            print("ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
+            print("Cutoff:", self.cutoff, "Hz")
+            print("OSC 1 Detune:", self.pitch_1)
+            print("OSC 1 Wave:", self.wave_1)
+            print("OSC 2 Detune:", self.pitch_2)
+            print("OSC 2 Wave:", self.wave_2)      
+
+class ChordSubstractiveSynth1(SubstractiveSynth1):
+    def __init__(self, bpm, seq, sig) -> None:
+        super().__init__(bpm, seq, sig)   
+
+        self.name = "chord_substractive_synth1"
+        
+        # Synth parameters
+        # a, b, mean, sigma
+
+        # Amp enveloppe
+        self.amp_A = custom_norm(0, 2, 0.05, 0.1)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.8, 0.1)
+        self.amp_R = custom_norm(0, 3, 0.05, 0.2)
+
+        # Filter
+        # Shoudl implement an envelope enventually
+        self.cutoff = custom_norm(300, 20000, 10000, 10000)
+
+        # OSC 1
+        self.wave_1 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_1 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        # OSC 2
+        self.wave_2 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_2 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        if True:
+            print("ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
+            print("Cutoff:", self.cutoff, "Hz")
+            print("OSC 1 Detune:", self.pitch_1)
+            print("OSC 1 Wave:", self.wave_1)
+            print("OSC 2 Detune:", self.pitch_2)
+            print("OSC 2 Wave:", self.wave_2)      
+
+
+class MelodySubstractiveSynth1(SubstractiveSynth1):
+    def __init__(self, bpm, seq, sig) -> None:
+        super().__init__(bpm, seq, sig)   
+
+        self.name = "melody_substractive_synth1"
+        
+        # Synth parameters
+        # a, b, mean, sigma
+
+        # Amp enveloppe
+        self.amp_A = custom_norm(0, 2, 0.05, 0.1)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.8, 0.1)
+        self.amp_R = custom_norm(0, 3, 0.05, 0.2)
+
+        # Filter
+        # Shoudl implement an envelope enventually
+        self.cutoff = custom_norm(300, 20000, 10000, 10000)
+
+        # OSC 1
+        self.wave_1 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_1 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        # OSC 2
+        self.wave_2 = np.random.choice(
+            [np.sin, lambda x: sci.signal.sawtooth(x + np.pi), sci.signal.square, lambda x: sci.signal.sawtooth(x + np.pi/2, 0.5)],
+            p = [0.15, 0.45, 0.3, 0.1]
+        )
+        self.pitch_2 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
+
+        if True:
+            print("ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
+            print("Cutoff:", self.cutoff, "Hz")
+            print("OSC 1 Detune:", self.pitch_1)
+            print("OSC 1 Wave:", self.wave_1)
+            print("OSC 2 Detune:", self.pitch_2)
+            print("OSC 2 Wave:", self.wave_2)      

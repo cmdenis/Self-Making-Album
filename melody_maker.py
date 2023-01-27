@@ -1,6 +1,6 @@
 from notes import Sequence, Event
 import numpy as np
-from synth import SineSynth, SawtoothSynth, SubstractiveSynth1
+from synth import SineSynth, SawtoothSynth, MelodySubstractiveSynth1
 from effects import reverb, waveshaper, custom_norm
 
 class MelodySequence(Sequence):
@@ -9,7 +9,7 @@ class MelodySequence(Sequence):
         super().__init__(bpm, chord_pattern, sr)
         self.name = "melody"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth, SubstractiveSynth1], p = [0.10, 0.10, 0.80])
+        self.sound = np.random.choice([SineSynth, SawtoothSynth, MelodySubstractiveSynth1], p = [0.10, 0.10, 0.80])
 
     def arpeggio_melody(self):
         '''Method to make an arpeggio based on the chords used. Will randomly select amongst different arpegiating patterns.'''
