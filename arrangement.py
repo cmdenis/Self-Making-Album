@@ -18,7 +18,7 @@ def make_arrangement():
     length = seqs.chord_pattern.pat_length # Length of pattern in quarter beats
 
 
-    seqs.loop_multitrack(4, 0, length)
+    seqs.loop_multitrack(1, 0, length)
 
     return seqs
 

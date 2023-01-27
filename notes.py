@@ -7,7 +7,10 @@ class Event:
     def __init__(self, midi_note, start, end, channel, message = None):
         # Handling possible misuse cases
         if start > end:
-            raise NameError("Starting Time is After End Time...")
+            if (start - end) < 0.000001:
+                print("WARNING! 0 Duration note!")
+            else:
+                raise NameError("Starting Time (", start, ") is After End Time (", end, ")...")
         if start < 0:
             raise NameError("Starting Time Before 0...")
 

@@ -109,14 +109,6 @@ class SubstractiveSynth1(Synth):
         )
         self.pitch_2 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
 
-        if True:
-            print("ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
-            print("Cutoff:", self.cutoff, "Hz")
-            print("OSC 1 Detune:", self.pitch_1)
-            print("OSC 1 Wave:", self.wave_1)
-            print("OSC 2 Detune:", self.pitch_2)
-            print("OSC 2 Wave:", self.wave_2)
-
     def play(self):
         print("Using 'substractive_synth_1' generator...")
 

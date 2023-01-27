@@ -40,14 +40,37 @@ class MelodySequence(Sequence):
             #print(nb_notes)
             #print(len(chord))
             notes = np.tile(np.random.choice(chord, size = nb_notes), 16)
-            # Make start and end of each note:
-            note_starts = np.arange(start, end, note_length)
-            note_ends = note_starts + note_length
-            # fix last note length
-            note_ends[-1] = end
-            notes = notes[:len(note_ends)]
-            #print(note_ends, note_starts, notes)
-            assert(len(notes)==len(note_starts)==len(note_ends))
+            
+            if np.random.rand() < 0.5:
+                # Make start and end of each note:
+                note_starts = np.arange(start, end, note_length)
+                note_ends = note_starts + note_length
+                # fix last note length
+                note_ends[-1] = end
+                notes = notes[:len(note_ends)]
+                #print(note_ends, note_starts, notes)
+                assert(len(notes)==len(note_starts)==len(note_ends))
+            elif np.random.rand() < 0.5:
+                # Make start and end of each note:
+                note_starts = np.arange(start, end, note_length)
+                note_ends = np.append(note_starts[1:], end)
+                
+                notes = notes[:len(note_ends)]
+                #print(note_ends, note_starts, notes)
+                assert(len(notes)==len(note_starts)==len(note_ends))
+            else:
+                # Make start and end of each note:
+                note_starts = np.arange(start, end, note_length)
+                remover = np.random.choice(np.arange(1, len(note_starts)), size = np.random.randint(0, int(len(note_starts)/2)))
+                note_starts = np.delete(note_starts, remover)
+                note_ends = note_starts + note_length
+                print(note_starts)
+                print(note_ends)
+                # fix last note length
+                note_ends[-1] = end
+                notes = notes[:len(note_ends)]
+                #print(note_ends, note_starts, notes)
+                assert(len(notes)==len(note_starts)==len(note_ends))
             
             for note, note_start, note_end in zip(notes, note_starts, note_ends):
                 self.events.append(
