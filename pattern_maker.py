@@ -66,7 +66,7 @@ def make_pattern(bpm, root, instruments, sample_rate):
     # Select a mode for getting chord pattern
     mode = np.random.choice(
         [hard_coded_patterns,
-        completly_random_patterns]
+        completly_random_patterns], p = [0.3, 0.7]
     )
     
     # Initializes the tracks

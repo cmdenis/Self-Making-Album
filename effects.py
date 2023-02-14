@@ -54,6 +54,61 @@ def lp_butterworth(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = F
     signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal*(1-dry_wet) # Inverse fft
     return signal
 
+def ladder_test(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = False):
+    #print("Applying 'lp_butterworth' filter...")
+
+    sig = signal.signal()
+
+    # Plot power spectrum if boolean is true
+    if show_plot:
+        plt.plot(sig_freq, np.abs(sig_fft)**2, label = "Unfiltered Frequencies")
+        plt.plot(sig_freq, np.abs(sig_filt_fft)**2, label = "Filtered Frequencies")
+        plt.plot(sig_freq, filt, label = "Filter")
+        plt.xscale("log")
+        plt.show()
+
+        plt.plot(sci.fft.ifft(sig_filt_fft).real)
+        plt.show()
+
+    return signal
+
+def lp_4th_order(sig, cutoff, res):
+    '''Function that applies a 4th order lowpass filter on a signal.
+    Cutoff can be a 1D array of the same size as the signal.'''
+
+    samples = np.empty(sig.length) 
+
+    cutoff = cutoff*np.ones(sig.length)
+    cutoff[cutoff<=0] = 0           # Making sure the cutoff stays within right bounds
+    cutoff[cutoff>22000] = 22000
+
+    fs = sig.sr
+    cutoff = -np.exp(-(cutoff-43350)/4900) + 7000
+    ff = 2 * cutoff / fs
+    kk = 3.6*ff - 1.6*ff**2 -1
+    pp = (kk+1)*0.5
+    rr = res*15*np.ones(sig.length)
+
+    y1=y2=y3=y4=oldx=oldy1=oldy2=oldy3=0
+
+
+    for i, sample, k, p, r in zip(range(sig.length), sig.signal, kk, pp, rr):
+
+        y1=(  sample - r*y4  )*p + oldx*p - k*y1
+        y2=y1*p+oldy1*p - k*y2
+        y3=y2*p+oldy2*p - k*y3
+        y4=y3*p+oldy3*p - k*y4
+
+        samples[i] = y4
+
+
+    samples = samples
+    #samples = temp
+    samples = np.arctan(samples/1.6/np.max(samples))*1.6
+
+    sig.signal = samples
+
+
 
 def hp_butterworth(signal, cutoff, order, dry_wet = 1, show_plot = False):
 

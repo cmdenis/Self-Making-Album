@@ -61,8 +61,12 @@ class MelodySequence(Sequence):
             else:
                 # Make start and end of each note:
                 note_starts = np.arange(start, end, note_length)
-                remover = np.random.choice(np.arange(1, len(note_starts)), size = np.random.randint(0, int(len(note_starts)/2)))
-                note_starts = np.delete(note_starts, remover)
+
+
+                if int(len(note_starts)/2) != 0:
+                    remover = np.random.choice(np.arange(0, len(note_starts)), size = np.random.randint(int(len(note_starts)/2)))
+                    note_starts = np.delete(note_starts, remover)
+                    
                 note_ends = note_starts + note_length
                 print(note_starts)
                 print(note_ends)
