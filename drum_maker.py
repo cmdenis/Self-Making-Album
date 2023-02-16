@@ -10,9 +10,9 @@ from signals import Signal
 
 class PercussionInstrumentSequence(Sequence):
     
-    def __init__(self, bpm, chord_pattern, sr):
+    def __init__(self, bpm, chord_pattern, sr, channel):
         super().__init__(bpm, chord_pattern, sr)
-        
+        self.channel = channel
 
         self.name = None
 
@@ -26,7 +26,7 @@ class PercussionInstrumentSequence(Sequence):
                     midi_note,
                     shot,
                     shot+0.01,
-                    2,
+                    self.channel,
                     message = self.name
                 )
             )
@@ -59,8 +59,8 @@ class PercussionInstrumentSequence(Sequence):
             sig.signal += np.concatenate((t0, t1, t2, buffer))[:sig.sr*sig.duration]
 
 class BassDrumSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr):
-        super().__init__(bpm, chord_pattern, sr)
+    def __init__(self, bpm, chord_pattern, sr, channel):
+        super().__init__(bpm, chord_pattern, sr, channel)
 
         self.name = "bass_drum"
 
@@ -99,7 +99,7 @@ class BassDrumSequence(PercussionInstrumentSequence):
                     midi_note,                          # Midi note
                     (start_time + i)*self.beat_time,    # Start time 
                     (end_time + i)*self.beat_time,      # End time
-                    0,                                  # Channel
+                    self.channel,                                  # Channel
                     message="bass_drum"                 # Message
                 )
             )
@@ -107,8 +107,8 @@ class BassDrumSequence(PercussionInstrumentSequence):
         self.events = list(np.array(self.events)[beats])
 
 class SnareDrumSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr):
-        super().__init__(bpm, chord_pattern, sr)
+    def __init__(self, bpm, chord_pattern, sr, channel):
+        super().__init__(bpm, chord_pattern, sr, channel)
 
         self.name = "snare_drum"
 
@@ -148,7 +148,7 @@ class SnareDrumSequence(PercussionInstrumentSequence):
                     midi_note,                          # Midi note
                     (start_time + i)*self.beat_time,    # Start time
                     (end_time + i)*self.beat_time,      # End time
-                    1,                                  # Channel
+                    self.channel,                                  # Channel
                     message = "snare"                   # Message
                 )
             )
@@ -156,8 +156,8 @@ class SnareDrumSequence(PercussionInstrumentSequence):
         self.events = self.events + list(np.array(events)[beats])
 
 class HihatSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr):
-        super().__init__(bpm, chord_pattern, sr)
+    def __init__(self, bpm, chord_pattern, sr, channel):
+        super().__init__(bpm, chord_pattern, sr, channel)
 
         self.name = "hi_hat"
 
@@ -193,7 +193,7 @@ class HihatSequence(PercussionInstrumentSequence):
                         midi_note,          # Note used
                         shot,               # Start of note
                         shot+0.01,          # End of note
-                        2,                  # Channel
+                        self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
                 )
@@ -204,7 +204,7 @@ class HihatSequence(PercussionInstrumentSequence):
                         midi_note,
                         shot,
                         shot+0.01,
-                        2,                  # Channel
+                        self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
                 )
@@ -215,7 +215,7 @@ class HihatSequence(PercussionInstrumentSequence):
                         midi_note,
                         shot,
                         shot+0.01,
-                        2,                  # Channel
+                        self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
                 )
@@ -229,18 +229,22 @@ class DrumSequence(Sequence):
 
         self.tracks = []
 
+        channel = 0
         # Appending bass drum(s) to track
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
-            self.tracks.append(BassDrumSequence(self.bpm, self.chord_pattern, self.sr))
+            self.tracks.append(BassDrumSequence(self.bpm, self.chord_pattern, self.sr, channel))
+            channel += 1
 
         # Appending snare drum(s) to track
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
-            self.tracks.append(SnareDrumSequence(self.bpm, self.chord_pattern, self.sr))
+            self.tracks.append(SnareDrumSequence(self.bpm, self.chord_pattern, self.sr, channel))
+            channel += 1
 
 
         # Appending snare drum(s) to track
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.15, 0.75, 0.08, 0.02])):
-            self.tracks.append(HihatSequence(self.bpm, self.chord_pattern, self.sr))
+            self.tracks.append(HihatSequence(self.bpm, self.chord_pattern, self.sr, channel))
+            channel += 1
         
 
         '''self.tracks = list([
