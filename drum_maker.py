@@ -226,11 +226,22 @@ class DrumSequence(Sequence):
     def __init__(self, bpm, chord_pattern, sr):
         super().__init__(bpm, chord_pattern, sr)
         self.name = "drum"
-        self.tracks = [
-            BassDrumSequence(self.bpm, self.chord_pattern, self.sr), 
-            SnareDrumSequence(self.bpm, self.chord_pattern, self.sr), 
-            #HihatSequence(self.bpm, self.chord_pattern, self.sr)
-        ] 
+
+        self.tracks = []
+
+        # Appending bass drum(s) to track
+        for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
+            self.tracks.append(BassDrumSequence(self.bpm, self.chord_pattern, self.sr))
+
+        # Appending snare drum(s) to track
+        for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
+            self.tracks.append(SnareDrumSequence(self.bpm, self.chord_pattern, self.sr))
+
+
+        # Appending snare drum(s) to track
+        for i in range(np.random.choice([0, 1, 2, 3], p = [0.15, 0.75, 0.08, 0.02])):
+            self.tracks.append(HihatSequence(self.bpm, self.chord_pattern, self.sr))
+        
 
         '''self.tracks = list([
             np.random.choice(
@@ -326,7 +337,6 @@ class DrumSequence(Sequence):
 
     def play_sound(self, sig):
         print("\n==== 🥁 Synthesizing drum sound... ====")
-        print("beat:", 60/self.bpm)
 
         for track in self.tracks:
             # Making drum signal

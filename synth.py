@@ -161,7 +161,6 @@ class BassSubstractiveSynth1(SubstractiveSynth1):
             base_freq = custom_norm(300, 20000, 10000, 10000)
             lfo_amt = 5000#custom_norm(10, 15000, 300, 500)
             lfo_freq = 1/seq.beat_time * np.random.choice([0.25, 0.5, 1, 2, 4])
-            print("beat", seq.beat_time)
             self.cutoff = base_freq + lfo_amt*np.cos(np.linspace(0, sig.duration, sig.length)*2*np.pi*lfo_freq)
             self.resonance = custom_norm(0, 1, 0.3, 0.4)
 
