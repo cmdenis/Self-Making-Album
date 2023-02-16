@@ -12,7 +12,7 @@ import os
 
 # Initial parameters
 bpm = custom_norm(70, 200, 120, 100)
-length = 32
+length = 64
 time = length*60/bpm + 4
 sr = 44100
 file_name = "audio_tests/bass_drums_chords_test"

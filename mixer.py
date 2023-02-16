@@ -38,9 +38,9 @@ class MultiSignal():
             
             seq.play_sound(self.signals[idx])
 
-    def save_master(self):
+    def save_master(self, mp3 = False):
         self.get_master()
-        self.signals[-1].save_sound(mp3=True)
+        self.signals[-1].save_sound(mp3=mp3)
 
 
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 
     # Instantiate signal
-    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 20)
+    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 2)
 
 
     
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     sigs.play_sounds()
 
     # Save sound
-    sigs.save_master()
+    sigs.save_master(mp3 = False)
 
 
 

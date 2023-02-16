@@ -12,6 +12,7 @@ class PercussionInstrumentSequence(Sequence):
     
     def __init__(self, bpm, chord_pattern, sr):
         super().__init__(bpm, chord_pattern, sr)
+        
 
         self.name = None
 
@@ -34,7 +35,7 @@ class PercussionInstrumentSequence(Sequence):
         print("Synthesizing a '" + self.name + "' sound...")
 
         # Making the samples
-        x = np.arange(sig.length)/sig.sr
+        x = np.arange(int(self.sample.length*sig.sr+1))/sig.sr
         if self.choke == True:
             self.sort_sequence()
 
@@ -54,6 +55,7 @@ class PercussionInstrumentSequence(Sequence):
                 sig.signal[int(ev.start*sig.sr):int(((ev.start+self.sample.length))*sig.sr)] = 0
 
             # Add sound to signal
+            #print(len(np.concatenate((t0, t1, t2, buffer))[:sig.sr*sig.duration]))
             sig.signal += np.concatenate((t0, t1, t2, buffer))[:sig.sr*sig.duration]
 
 class BassDrumSequence(PercussionInstrumentSequence):
@@ -65,7 +67,7 @@ class BassDrumSequence(PercussionInstrumentSequence):
         self.choke = False
         
         # Instantiates bass drum sample
-        self.sample = BassDrumSound( 2, self.sr)
+        self.sample = BassDrumSound(2, self.sr)
 
 
     def make_seq(self, start_time, end_time, midi_note = 0):
@@ -227,7 +229,7 @@ class DrumSequence(Sequence):
         self.tracks = [
             BassDrumSequence(self.bpm, self.chord_pattern, self.sr), 
             SnareDrumSequence(self.bpm, self.chord_pattern, self.sr), 
-            HihatSequence(self.bpm, self.chord_pattern, self.sr)
+            #HihatSequence(self.bpm, self.chord_pattern, self.sr)
         ] 
 
         '''self.tracks = list([
@@ -324,7 +326,7 @@ class DrumSequence(Sequence):
 
     def play_sound(self, sig):
         print("\n==== 🥁 Synthesizing drum sound... ====")
-
+        print("beat:", 60/self.bpm)
 
         for track in self.tracks:
             # Making drum signal
@@ -336,7 +338,7 @@ class DrumSequence(Sequence):
                 reverb(
                     temp_sig,                            # Signal
                     custom_norm(0.01, 4, 0.5, 0.5), # Length of reverb
-                    custom_norm(0, 1, 0.3, 0.2)     # Dry/Wet Mix
+                    custom_norm(0, 1, 0, 0.2)     # Dry/Wet Mix
                 )
 
             # Adding waveshaper

@@ -72,27 +72,27 @@ def ladder_test(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = Fals
 
     return signal
 
-def lp_4th_order(sig, cutoff, res):
+def lp_4th_order(sig, cutoff, res, length, sr):
     '''Function that applies a 4th order lowpass filter on a signal.
     Cutoff can be a 1D array of the same size as the signal.'''
 
-    samples = np.empty(sig.length) 
+    samples = np.empty(length) 
 
-    cutoff = cutoff*np.ones(sig.length)
+    cutoff = cutoff*np.ones(length)
     cutoff[cutoff<=0] = 0           # Making sure the cutoff stays within right bounds
     cutoff[cutoff>22000] = 22000
 
-    fs = sig.sr
+    fs = sr
     cutoff = -np.exp(-(cutoff-43350)/4900) + 7000
     ff = 2 * cutoff / fs
     kk = 3.6*ff - 1.6*ff**2 -1
     pp = (kk+1)*0.5
-    rr = res*15*np.ones(sig.length)
+    rr = res*15*np.ones(length)
 
     y1=y2=y3=y4=oldx=oldy1=oldy2=oldy3=0
 
 
-    for i, sample, k, p, r in zip(range(sig.length), sig.signal, kk, pp, rr):
+    for i, sample, k, p, r in zip(range(length), sig, kk, pp, rr):
 
         y1=(  sample - r*y4  )*p + oldx*p - k*y1
         y2=y1*p+oldy1*p - k*y2
@@ -104,9 +104,9 @@ def lp_4th_order(sig, cutoff, res):
 
     samples = samples
     #samples = temp
-    samples = np.arctan(samples/1.6/np.max(samples))*1.6
-
-    sig.signal = samples
+    sig = np.arctan(samples/1.6/np.max(samples))*1.6
+    return sig
+    
 
 
 

@@ -10,7 +10,7 @@ class BassSequence(Sequence):
         
         self.name = "bass"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth, BassSubstractiveSynth1])
+        self.sound = np.random.choice([SineSynth, SawtoothSynth, BassSubstractiveSynth1], p = [0, 0, 1])
 
     def hold_bass(self):
         '''Function to make a pattern of held down bass line'''

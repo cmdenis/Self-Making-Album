@@ -10,7 +10,12 @@ def make_arrangement():
     # In the future, I hope to add more parameters, 
     # and to be able to cut down entries and make more than one pattern and that sort of thing.
     root = 0
-    instruments = [MelodySequence, ChordSequence, BassSequence, DrumSequence]
+    instruments = [
+        MelodySequence, 
+        ChordSequence, 
+        BassSequence, 
+        DrumSequence
+        ]
     bpm = np.random.rand()*100+40
 
     seqs = make_pattern(bpm, root, instruments, 44100)

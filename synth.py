@@ -1,6 +1,6 @@
 import numpy as np
 import scipy as sci
-from effects import custom_norm, lp_butterworth
+from effects import custom_norm, lp_butterworth, lp_4th_order
 import matplotlib.pyplot as plt
 
 def ADSR(x, a, d, s, r, show_plot = False):
@@ -92,8 +92,9 @@ class SubstractiveSynth1(Synth):
         self.amp_R = custom_norm(0, 3, 0.05, 0.2)
 
         # Filter
-        # Shoudl implement an envelope enventually
+        # Should implement an envelope enventually
         self.cutoff = custom_norm(300, 20000, 10000, 10000)
+        self.resonance = custom_norm(0, 1, 0.3, 0.4)
 
         # OSC 1
         self.wave_1 = np.random.choice(
@@ -121,13 +122,15 @@ class SubstractiveSynth1(Synth):
 
             t1 = self.wave_1(2*np.pi*(ev.pitch*(1 + self.pitch_1)*samples))     # Create waveform 1
             t1 += self.wave_2(2*np.pi*(ev.pitch*(1 + self.pitch_2)*samples))    # Add waveform 2
-            t1 = lp_butterworth(t1, self.sig.sr, self.cutoff, 2)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
+            
             t1 = t1*ADSR(samples, self.amp_A, self.amp_D, self.amp_S, self.amp_R)   # Apply envelope
         
             t2 = np.zeros(int((self.sig.duration - ev.end)*self.sig.sr))              # Zeros at the end of sound
             buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
             self.sig.signal += np.concatenate((t0, t1, t2, buffer))[:self.sig.sr*self.sig.duration]
+        
+        self.sig.signal = lp_4th_order(self.sig.signal, self.cutoff, self.resonance, self.sig.length, self.sig.sr)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
 
 
 
@@ -149,7 +152,18 @@ class BassSubstractiveSynth1(SubstractiveSynth1):
 
         # Filter
         # Shoudl implement an envelope enventually
-        self.cutoff = custom_norm(300, 20000, 10000, 10000)
+        if np.random.rand() < 0.:
+            # Fixed cutoff
+            self.cutoff = custom_norm(300, 20000, 10000, 10000)
+            self.resonance = custom_norm(0, 1, 0.3, 0.4)
+        else:
+            # LFO modulated cutoff
+            base_freq = custom_norm(300, 20000, 10000, 10000)
+            lfo_amt = 5000#custom_norm(10, 15000, 300, 500)
+            lfo_freq = 1/seq.beat_time * np.random.choice([0.25, 0.5, 1, 2, 4])
+            print("beat", seq.beat_time)
+            self.cutoff = base_freq + lfo_amt*np.cos(np.linspace(0, sig.duration, sig.length)*2*np.pi*lfo_freq)
+            self.resonance = custom_norm(0, 1, 0.3, 0.4)
 
         # OSC 1
         self.wave_1 = np.random.choice(
