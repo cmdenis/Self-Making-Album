@@ -43,9 +43,9 @@ class BassDrumSound(DrumSound):
         # Create drum parameters
         self.param = [
             custom_norm(20, 20000, 40, 20),         # p[0]: Pitch (Hz)
-            custom_norm(0.9, 15, 6, 2),             # p[1]: Pitch mod
+            custom_norm(0.9, 15, 4, 2),             # p[1]: Pitch mod
             custom_norm(0.005, 1, 0.03, 0.03),      # p[2]: Pitch decay (s)
-            custom_norm(0.002, 3, 0.2, 0.5),        # p[3]: Amp decay (s)
+            custom_norm(0.002, 3, 0.2, 0.8),        # p[3]: Amp decay (s)
         ]
     
     def make_sample(self, x, p):
@@ -67,4 +67,21 @@ class HihatSound(DrumSound):
         filt = sci.signal.butter(3, 500, btype="highpass", fs = self.sr, output="sos")
         return sci.signal.sosfilt(filt, sound)
     
+class ClickSound(DrumSound):
+    def __init__(self, length, sample_rate, func=None):
+        super().__init__(length, sample_rate, func)
 
+        self.param = [
+            custom_norm(100, 800, 200, 25),     # p[0]: Pitch (Hz)
+            custom_norm(0.99, 5, 1, 0.1),       # p[1]: Pitch mod
+            custom_norm(0, 5, 0.1, 2),          # p[2]: Pitch decay (s)
+            custom_norm(0.01, 3, 0.1, 0.1),     # p[3]: Amp decay (s)
+            custom_norm(0.01, 3, 0.07, 0.1),    # p[4]: noise decay
+            custom_norm(0, 1, 0.5, 0.5)         # p[5]: noise/tone ratio
+        ]
+
+    def make_sample(self, x, p):
+        '''To make snare drum sound'''
+        sound = np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
+        filt = sci.signal.butter(3, 200, btype="highpass", fs = self.sr, output="sos")
+        return sci.signal.sosfilt(filt, sound)
