@@ -9,7 +9,7 @@ from effects import *   # Important for distribution stuff
 
 
 class DrumSound:
-    def __init__(self, length, sample_rate, func = None):
+    def __init__(self, length, sample_rate, chord_pattern, func = None):
         '''Initializes instrument. Instruments such as bass drum or snare inherit attributes from this class.'''
         
         self.length = length            # Length of sample (in seconds)
@@ -18,8 +18,8 @@ class DrumSound:
 
 
 class SnareDrumSound(DrumSound):
-    def __init__(self, length, sample_rate, func=None):
-        super().__init__(length, sample_rate, func)
+    def __init__(self, length, sample_rate, chord_pattern, func=None):
+        super().__init__(length, sample_rate, chord_pattern, func)
 
         self.param = [
             custom_norm(100, 800, 200, 25),     # p[0]: Pitch (Hz)
@@ -37,8 +37,8 @@ class SnareDrumSound(DrumSound):
         return sci.signal.sosfilt(filt, sound)
 
 class BassDrumSound(DrumSound):
-    def __init__(self, length, sample_rate, func=None):
-        super().__init__(length, sample_rate, func)
+    def __init__(self, length, sample_rate, chord_pattern, func=None):
+        super().__init__(length, sample_rate, chord_pattern, func)
 
         # Create drum parameters
         self.param = [
@@ -53,8 +53,8 @@ class BassDrumSound(DrumSound):
         return np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
 
 class HihatSound(DrumSound):
-    def __init__(self, length, sample_rate, func=None):
-        super().__init__(length, sample_rate, func)
+    def __init__(self, length, sample_rate, chord_pattern, func=None):
+        super().__init__(length, sample_rate, chord_pattern, func)
 
         self.param = [
                 custom_norm(0.001, 0.01, 0.005, 0.005),     # p[0]: Noise decay
@@ -68,20 +68,17 @@ class HihatSound(DrumSound):
         return sci.signal.sosfilt(filt, sound)
     
 class ClickSound(DrumSound):
-    def __init__(self, length, sample_rate, func=None):
-        super().__init__(length, sample_rate, func)
+    def __init__(self, length, sample_rate, chord_pattern, func=None):
+        super().__init__(length, sample_rate, chord_pattern, func)
 
         self.param = [
-            custom_norm(100, 800, 200, 25),     # p[0]: Pitch (Hz)
-            custom_norm(0.99, 5, 1, 0.1),       # p[1]: Pitch mod
+            custom_norm(100, 1000, 550, 50),     # p[0]: Pitch (Hz)
+            custom_norm(0.99, 5, 1, 0.05),       # p[1]: Pitch mod
             custom_norm(0, 5, 0.1, 2),          # p[2]: Pitch decay (s)
             custom_norm(0.01, 3, 0.1, 0.1),     # p[3]: Amp decay (s)
-            custom_norm(0.01, 3, 0.07, 0.1),    # p[4]: noise decay
-            custom_norm(0, 1, 0.5, 0.5)         # p[5]: noise/tone ratio
         ]
+
 
     def make_sample(self, x, p):
         '''To make snare drum sound'''
-        sound = np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])*(1-p[5]) + np.random.uniform(-1, 1, len(x))*np.exp(-x/p[4])*p[5]
-        filt = sci.signal.butter(3, 200, btype="highpass", fs = self.sr, output="sos")
-        return sci.signal.sosfilt(filt, sound)
+        return np.sin(2*np.pi*((1-p[1])*p[2]*np.exp(-x/p[2]) - (1-p[1])*p[2] +x)*p[0])*np.exp(-x/p[3])
