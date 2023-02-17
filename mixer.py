@@ -43,7 +43,19 @@ class MultiSignal():
         self.signals[-1].save_sound(mp3=mp3)
 
 
+def make_music(seed, sample_rate, filename, mp3 = True):
+    '''Function that makes the music'''
+    print("Using Seed:", seed, "\n")
+    # Make note data
+    seqs = make_arrangement()
+    max_time = seqs.last_time()
 
+    # Instantiate signal
+    sigs = MultiSignal(seqs, sample_rate, filename+".wav", max_time + 2)
+    # Synthesize sound
+    sigs.play_sounds()
+    # Save sound
+    sigs.save_master(mp3 = False)
 
 
 if __name__ == "__main__":
