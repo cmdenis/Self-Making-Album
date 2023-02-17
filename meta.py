@@ -4,7 +4,9 @@ import numpy as np
 
 # Let's make a couple of examples
 
-for i in range(3):
+n = 10
+
+for i in range(10):
     filename = "audio_tests/batches/output_"+str(i)
     print("-------------------------------")
     print("-------------------------------")
