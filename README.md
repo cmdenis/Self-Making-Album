@@ -1,6 +1,16 @@
 # Self-Making-Album
 
-## Random notes
+## Explanations
+
+Hello!
+
+You have stumbled on my procedural music project. The project should be in somewhat working order. So far it is very basic and produces pretty crappy tunes... but hey I can call them tunes, so that's already pretty cool... There's some audio demos in the `audio_tests` folder. 
+
+**If you want to try it out, I invite you to clone the repo and run the `meta.py` file script on your own machine.**
+
+ Everything uses the `numpy`, `scipy`, `matplotlib`, `os` and `pydub` libbraries, so if you've got those, you should be good to go. `pydub` is only used to convert the `.wav` files to `.mp3`, to make things lighter, but if you don't convert stuff, you won't need it. Just make sure to turn off any settings converting stuff to MP3.
+
+## Random Stuff
 
 The idea here is to make a bunch of interelated scripts which will generate a musical album. In this repo, I'll make some sound engines to make noise. I'll also make some automated composition tools which will randomly be able to select from a a set of chord and melody generating algorithms.
 

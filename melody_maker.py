@@ -68,8 +68,8 @@ class MelodySequence(Sequence):
                     note_starts = np.delete(note_starts, remover)
                     
                 note_ends = note_starts + note_length
-                print(note_starts)
-                print(note_ends)
+                #print(note_starts)
+                #print(note_ends)
                 # fix last note length
                 note_ends[-1] = end
                 notes = notes[:len(note_ends)]

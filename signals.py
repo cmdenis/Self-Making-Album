@@ -2,7 +2,10 @@ import numpy as np
 from scipy.io.wavfile import write
 from effects import hp_butterworth
 import scipy as sci
-from pydub import AudioSegment
+try:
+    from pydub import AudioSegment
+except:
+    print("Warning! It seems you do not have pydub installed... Everything **should** run fine as long as you don't try to convert anything to MP3...")
 import os
 
 class Signal:

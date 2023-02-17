@@ -8,12 +8,12 @@ n = 10
 
 for i in range(10):
     filename = "audio_tests/batches/output_"+str(i)
-    print("-------------------------------")
+    print("\n\n-------------------------------")
     print("-------------------------------")
     print("-------------------------------")
     print("------- Making new song -------")
     print("-------------------------------")
     print("-------------------------------")
-    print("-------------------------------")
+    print("-------------------------------\n")
     seed = np.random.randint(0, 100000000)
-    make_music(seed, 44100, filename, mp3=False)
+    make_music(seed, 44100, filename, mp3=True)
