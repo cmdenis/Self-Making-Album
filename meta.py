@@ -6,7 +6,7 @@ import numpy as np
 
 n = 10
 
-for i in range(10):
+for i in range(20):
     filename = "audio_tests/batches/output_"+str(i)
     print("\n\n-------------------------------")
     print("-------------------------------")
@@ -16,4 +16,4 @@ for i in range(10):
     print("-------------------------------")
     print("-------------------------------\n")
     seed = np.random.randint(0, 100000000)
-    make_music(seed, 44100, filename, mp3=True)
+    make_music(seed, 44100, filename, mp3=False)

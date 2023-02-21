@@ -2,6 +2,9 @@ import numpy as np
 import scipy as sci
 from arrangement import make_arrangement
 from signals import Signal 
+from effects import lp_4th_order, custom_norm
+import matplotlib.pyplot as plt
+
 
 
 
@@ -17,6 +20,7 @@ class MultiSignal():
         self.save_sr = sample_rate
         self.filename = filename
         self.duration = duration
+        self.length = duration*sample_rate
 
         #self.signals = [Signal(self.sr, duration, filename[0:-4]+"_"+name+".wav") for name in self.names]
         self.signals = [Signal(self.sr, duration, name) for name in self.names]
@@ -38,8 +42,26 @@ class MultiSignal():
             
             seq.play_sound(self.signals[idx])
 
-    def save_master(self, mp3 = False):
+    def apply_master_effects(self):
+        '''Function to apply some effects on the master track'''
+        print("\n\n==== 🎛️ Applying effects to master channel... ====")
         self.get_master()
+
+        #plt.plot(self.signals[-1].signal)
+        #plt.show()
+        # Sweeping low-pass
+        if np.random.rand() < 0.1:
+            print("Applying filter sweep")
+            cutoff_sweep = np.sin(np.linspace(0, self.duration, self.signals[-1].length)*2*np.pi*(np.random.rand()/3+0.1) )*custom_norm(100, 10000, 2000, 1000) + custom_norm(500, 10000, 4000, 1000)
+
+            self.signals[-1].signal = lp_4th_order(self.signals[-1].signal, cutoff_sweep, 0., self.signals[-1].length, self.sr)
+            #plt.plot(self.signals[-1].signal)
+            #plt.show()
+
+        print("Normalizing master track signal...")
+        self.signals[-1].signal = self.signals[-1].signal/self.signals[-1].LUFS()
+
+    def save_master(self, mp3 = False):
         self.signals[-1].save_sound(mp3=mp3)
 
 
@@ -73,12 +95,15 @@ if __name__ == "__main__":
 
 
     # Instantiate signal
-    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time + 2)
+    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time+2)
 
 
     
     # Synthesize sound
     sigs.play_sounds()
+
+    # Add master effects
+    sigs.apply_master_effects()
 
     # Save sound
     sigs.save_master(mp3 = False)

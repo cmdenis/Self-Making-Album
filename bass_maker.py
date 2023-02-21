@@ -43,6 +43,49 @@ class BassSequence(Sequence):
         print("╠═╗")
         print("╚═╝")
 
+
+    def octave_bass(self):
+        '''Function to make a pattern of held down bass line'''
+
+        print("╠ Using 'hold_bass'...")
+
+        # First octave shift randomly all root notes for the bass line
+        note_selection = self.chord_pattern.roots
+        l = len(note_selection)
+        note_selection = note_selection + 12*np.random.randint(low = 2, high = 3, size = l)
+       
+
+        lengths = self.chord_pattern.lengths                        # Lengths of each note
+
+        new_lengths = []
+        new_notes = []
+        note_reso = 1/2#np.random.choice([1, 1/2, 1/4, 1/8]) # Duration of each note
+        for ll, nn in zip(lengths, note_selection):
+            octaver = 0
+            for i in np.diff(np.append(np.arange(0, ll, note_reso), ll)):
+                new_lengths.append(i)                           # Appending the new note lengths
+                new_notes.append(nn + 12*octaver)   # Appending the notes to the new array
+                octaver = 1 - octaver  # Making the octaver 1 is it's 0 and 0 if it's 1
+
+        starts = (np.cumsum(np.append(0, np.delete(new_lengths, -1))))*self.beat_time    # Time of start of each chords
+        ends = np.cumsum(new_lengths)*self.beat_time                    # Time of end of each chords
+
+        #print(starts)
+        for start, end, note in zip(starts, ends, new_notes):
+            #print(chord)
+            #print(start)
+            self.events.append(
+                Event(
+                    note,
+                    start,
+                    end,
+                    channel=0
+                )
+            )
+        
+        print("╠═╗")
+        print("╚═╝")
+
     def make_seq(self):
         '''Method to make the sequence of notes'''
 
@@ -51,7 +94,7 @@ class BassSequence(Sequence):
         print("╠═══════════════════════╝")
 
         # Choose which chord making procedure to make
-        method = np.random.choice([self.hold_bass])
+        method = np.random.choice([self.octave_bass])
 
         method()
 

@@ -89,6 +89,37 @@ class MelodySequence(Sequence):
         print("╠═╗")
         print("╚═╝")
 
+    def single_note_melody(self):
+        '''Function to make a pattern of single note melody'''
+
+        print("╠ Using 'single_note_melody'...")
+
+        # First octave shift randomly all root notes for the bass line
+        note_selection = self.chord_pattern.roots
+        l = len(note_selection)
+        note_selection = note_selection + 12*np.random.randint(low = 4, high = 7, size = l)
+       
+
+        lengths = self.chord_pattern.lengths                        # Lengths of each note
+        starts = (np.cumsum(np.append(0, np.delete(lengths, -1))))*self.beat_time    # Time of start of each chords
+        ends = np.cumsum(lengths)*self.beat_time                    # Time of end of each chords
+        ll = np.random.choice([1, 1/2, 1/4, 1/8])   # Lenght of notes
+        #print(starts)
+        for start, length, note in zip(starts, lengths*ll, note_selection):
+            #print(chord)
+            #print(start)
+            self.events.append(
+                Event(
+                    note,
+                    start,
+                    start + length,
+                    channel=0
+                )
+            )
+        
+        print("╠═╗")
+        print("╚═╝")
+
     def make_seq(self):
         '''Method to make the sequence of notes'''
 
@@ -97,7 +128,7 @@ class MelodySequence(Sequence):
         print("╠═══════════════════════╝")
 
         # Choose which chord making procedure to make
-        method = np.random.choice([self.arpeggio_melody])
+        method = np.random.choice([self.single_note_melody, self.arpeggio_melody])
 
         method()
 
