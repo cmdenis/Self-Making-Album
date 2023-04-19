@@ -110,7 +110,6 @@ def make_music(seed, sample_rate, filename, mp3 = True):
     seqs.write_note_data()
 
 
-
     # Instantiate signal
     
     sigs = MultiSignal(seqs, sample_rate, filename+".wav", max_time + 2)
