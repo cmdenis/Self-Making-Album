@@ -10,11 +10,12 @@ from signals import Signal
 
 class PercussionInstrumentSequence(Sequence):
     
-    def __init__(self, bpm, chord_pattern, sr, channel):
+    def __init__(self, bpm, chord_pattern, sr, channel, drum_index, midi_note = 0):
         super().__init__(bpm, chord_pattern, sr)
         self.channel = channel
-
+        self.midi_note = midi_note
         self.name = None
+        self.drum_index = drum_index
 
     
     def play_metronome(self, start_time, end_time, note_length, midi_note = 0):
@@ -23,9 +24,9 @@ class PercussionInstrumentSequence(Sequence):
         for shot in np.arange(start_time, end_time, note_length)*self.beat_time:
             self.events.append(
                 Event(
-                    midi_note,
+                    self.midi_note,
                     shot,
-                    shot+0.01,
+                    shot+self.beat_time,
                     self.channel,
                     message = self.name
                 )
@@ -59,8 +60,8 @@ class PercussionInstrumentSequence(Sequence):
             sig.signal += np.concatenate((t0, t1, t2, buffer))[:sig.sr*sig.duration]
 
 class BassDrumSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr, channel):
-        super().__init__(bpm, chord_pattern, sr, channel)
+    def __init__(self, bpm, chord_pattern, sr, channel, drum_index, midi_note=0):
+        super().__init__(bpm, chord_pattern, sr, channel, drum_index, midi_note)
 
         self.name = "bass_drum"
 
@@ -96,9 +97,9 @@ class BassDrumSequence(PercussionInstrumentSequence):
         for i in np.arange(start_time, end_time, 0.5):
             self.events.append(
                 Event(
-                    midi_note,                          # Midi note
+                    self.midi_note,                          # Midi note
                     (start_time + i)*self.beat_time,    # Start time 
-                    (end_time + i)*self.beat_time,      # End time
+                    (start_time + 1 + i)*self.beat_time,      # End time
                     self.channel,                                  # Channel
                     message="bass_drum"                 # Message
                 )
@@ -107,8 +108,8 @@ class BassDrumSequence(PercussionInstrumentSequence):
         self.events = list(np.array(self.events)[beats])
 
 class SnareDrumSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr, channel):
-        super().__init__(bpm, chord_pattern, sr, channel)
+    def __init__(self, bpm, chord_pattern, sr, channel, drum_index, midi_note=0):
+        super().__init__(bpm, chord_pattern, sr, channel, drum_index, midi_note)
 
         self.name = "snare_drum"
 
@@ -145,9 +146,9 @@ class SnareDrumSequence(PercussionInstrumentSequence):
         for i in np.arange(start_time, end_time, 0.5):
             events.append(
                 Event(
-                    midi_note,                          # Midi note
+                    self.midi_note,                          # Midi note
                     (start_time + i)*self.beat_time,    # Start time
-                    (end_time + i)*self.beat_time,      # End time
+                    (start_time + 1 + i)*self.beat_time,      # End time
                     self.channel,                                  # Channel
                     message = "snare"                   # Message
                 )
@@ -156,8 +157,8 @@ class SnareDrumSequence(PercussionInstrumentSequence):
         self.events = self.events + list(np.array(events)[beats])
 
 class HihatSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr, channel):
-        super().__init__(bpm, chord_pattern, sr, channel)
+    def __init__(self, bpm, chord_pattern, sr, channel, drum_index, midi_note=0):
+        super().__init__(bpm, chord_pattern, sr, channel, drum_index, midi_note)
 
         self.name = "hi_hat"
 
@@ -177,7 +178,7 @@ class HihatSequence(PercussionInstrumentSequence):
         # Make usual pattern (with note on each time)
         self.play_metronome(
             start_time, # Note start
-            end_time,   # Note end
+            start_time + self.beat_time,   # Note end
             note_length,# Note length
             midi_note=midi_note
         )
@@ -190,9 +191,9 @@ class HihatSequence(PercussionInstrumentSequence):
             if np.random.rand() < 0.2*weight and (0<= np.mod(shot, 2) < 1):
                 self.events.append(
                     Event(
-                        midi_note,          # Note used
+                        self.midi_note,          # Note used
                         shot,               # Start of note
-                        shot+0.01,          # End of note
+                        shot+self.beat_time,          # End of note
                         self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
@@ -201,9 +202,9 @@ class HihatSequence(PercussionInstrumentSequence):
             elif np.random.rand() < 0.3*weight and (1 <= np.mod(shot, 2) < 1.5):
                 self.events.append(
                     Event(
-                        midi_note,
+                        self.midi_note,
                         shot,
-                        shot+0.01,
+                        shot+self.beat_time,
                         self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
@@ -212,17 +213,17 @@ class HihatSequence(PercussionInstrumentSequence):
             elif np.random.rand() < 0.4*weight and (1.5 <= np.mod(shot, 2) < 2):
                 self.events.append(
                     Event(
-                        midi_note,
+                        self.midi_note,
                         shot,
-                        shot+0.01,
+                        shot+self.beat_time,
                         self.channel,                  # Channel
                         message = "hi_hat"  # Message
                     )
                 )
 
 class ClickSequence(PercussionInstrumentSequence):
-    def __init__(self, bpm, chord_pattern, sr, channel):
-        super().__init__(bpm, chord_pattern, sr, channel)
+    def __init__(self, bpm, chord_pattern, sr, channel, drum_index, midi_note=0):
+        super().__init__(bpm, chord_pattern, sr, channel, drum_index, midi_note)
 
         self.name = "click_sound"
 
@@ -277,9 +278,9 @@ class ClickSequence(PercussionInstrumentSequence):
         for i in np.arange(start_time, end_time, 0.5):
             events.append(
                 Event(
-                    midi_note,                          # Midi note
+                    self.midi_note,                          # Midi note
                     (start_time + i)*self.beat_time,    # Start time
-                    (end_time + i)*self.beat_time,      # End time
+                    (start_time + i+1)*self.beat_time,      # End time
                     self.channel,                                  # Channel
                     message = "snare"                   # Message
                 )
@@ -297,26 +298,38 @@ class DrumSequence(Sequence):
         self.tracks = []
 
         channel = 0
+        midi_note = 0
+        idx = 0
         # Appending bass drum(s) to track
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
-            self.tracks.append(BassDrumSequence(self.bpm, self.chord_pattern, self.sr, channel))
-            channel += 1
+            self.tracks.append(BassDrumSequence(self.bpm, self.chord_pattern, self.sr, 0, idx, midi_note=midi_note))
+            #channel += 1
+            midi_note += 1
+            idx += 1
 
         # Appending snare drum(s) to track
+        midi_note = 10
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.07, 0.8, 0.1, 0.03])):
-            self.tracks.append(SnareDrumSequence(self.bpm, self.chord_pattern, self.sr, channel))
-            channel += 1
+            self.tracks.append(SnareDrumSequence(self.bpm, self.chord_pattern, self.sr, 1, idx, midi_note=midi_note))
+            #channel += 1
+            midi_note += 1
+            idx += 1
 
-
-        # Appending snare drum(s) to track
+        # Appending hh drum(s) to track
+        midi_note = 20
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.15, 0.75, 0.08, 0.02])):
-            self.tracks.append(HihatSequence(self.bpm, self.chord_pattern, self.sr, channel))
-            channel += 1
+            self.tracks.append(HihatSequence(self.bpm, self.chord_pattern, self.sr, 2, idx, midi_note=midi_note))
+            #channel += 1
+            midi_note += 1
+            idx += 1
+
 
         # Appending some click sounds to track
+        midi_note = 30
         for i in range(np.random.choice([0, 1, 2, 3], p = [0.15, 0.75, 0.08, 0.02])):
-            self.tracks.append(ClickSequence(self.bpm, self.chord_pattern, self.sr, channel))
-            channel += 1
+            self.tracks.append(ClickSequence(self.bpm, self.chord_pattern, self.sr, 3, idx, midi_note=midi_note))
+            #channel += 1
+            midi_note += 1
         
 
         '''self.tracks = list([
@@ -355,16 +368,19 @@ class DrumSequence(Sequence):
         print("║")
 
         # Add events to overall drum sequence
+        #self.make_bus_events()
+        #self.print_beat()
         self.make_bus_events()
-        self.print_beat()
 
     def loop_sequence(self, n, start_time, end_time):
         '''Overriding loop_sequence for DrumSequence because need to loop individual sub-sequences'''
         for track in self.tracks:
             track.loop_sequence(n, start_time, end_time)
+        self.make_bus_events()
 
     def make_bus_events(self):
         '''Add all events from individual tracks to overall drum events'''
+        self.events = []
         # Circulate through different drums sounds/tracks
         for track in self.tracks:
             self.events += track.events
@@ -373,43 +389,42 @@ class DrumSequence(Sequence):
               
     def print_beat(self):   
         '''Function to print out a grid presenting the sequence of notes that were played.'''
-        try:
-            # Max beat
-            starts = [ev.start for ev in self.events]
-            m = int((np.max(starts))/self.beat_time*4)
+        # Max beat
+        starts = [ev.start for ev in self.events]
+        m = int((np.max(starts))/self.beat_time*4)
 
 
-            beats = np.zeros((len(self.tracks), 16*(int(m/16)+1)))
-            to_print =  "╠══════════╗\n"
-            to_print += "║  Tracks  ║ " + "  " + ("1---2---3---4---"*(int(m/16)+1)) + "\n"
-            to_print += "╠══════════╩═══" + 16*(int(m/16)+1)*"═" + "╗\n"
+        beats = np.zeros((len(self.tracks), 16*(int(m/16)+1)))
+        to_print =  "╠══════════╗\n"
+        to_print += "║  Tracks  ║ " + "  " + ("1---2---3---4---"*(int(m/16)+1)) + "\n"
+        to_print += "╠══════════╩═══" + 16*(int(m/16)+1)*"═" + "╗\n"
 
-            # Times of each 16th notes in sequence
-            times = np.arange(0, 16*(int(m/16)+1), 0.25)
-        
-            for ev in self.events:
-                beats[ev.channel, (np.abs(times - ev.start/self.beat_time)).argmin()] = 1
-
-            for idx, track in enumerate(self.tracks):
+        # Times of each 16th notes in sequence
+        times = np.arange(0, 16*(int(m/16)+1), 0.25)
     
-                name_cut = 12 
-                heading = track.name
-                heading = heading.ljust(name_cut)
-                heading = heading[0:name_cut]
-                to_print += ("║" + heading + ": ")
+        for ev in self.events:
+            beats[ev.idx, (np.abs(times - ev.start/self.beat_time)).argmin()] = 1
 
-                for strike in beats[idx]:
-                    if strike == 1:
-                        to_print += "█"
-                    else:
-                        to_print += " "
-                to_print += "║\n"
+        for idx, track in enumerate(self.tracks):
 
-            to_print += "╚"+(name_cut+2+16*(int(m/16)+1))*"═" + "╝"
+            name_cut = 12 
+            heading = track.name
+            heading = heading.ljust(name_cut)
+            heading = heading[0:name_cut]
+            to_print += ("║" + heading + ": ")
 
-            print(to_print)
-        except:
-            print("Problem with printing beat... (probably very exceptional beat arriving exactly on the last beat)")
+            for strike in beats[idx]:
+                if strike == 1:
+                    to_print += "█"
+                else:
+                    to_print += " "
+            to_print += "║\n"
+
+        to_print += "╚"+(name_cut+2+16*(int(m/16)+1))*"═" + "╝"
+
+        print(to_print)
+       
+
 
     def play_sound(self, sig):
         print("\n==== 🥁 Synthesizing drum sound... ====")

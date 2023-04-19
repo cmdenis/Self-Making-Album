@@ -1,5 +1,26 @@
 import numpy as np
 import random as rand
+import matplotlib.pyplot as plt
+import os
+import mido
+
+
+class MidiMessage:
+    '''Class for midi events. Used as an intermediate format for midi format using absolute time instead of delta time.'''
+    def __init__(self, action, note, time, velocity, channel):
+        self.action = action
+        self.note = note
+        self.time = time
+        self.velocity = velocity
+        self.channel = channel
+    
+    def __str__(self) -> str:
+        string = "\nEvent: "+ str(self.action)
+        string += "\n\t MIDI Note: " + str(self.note)
+        string += "\n\t Velocity: " + str(self.velocity)
+        string += "\n\t Time: " + str(self.time)
+        string += "\n\t Channel: " + str(self.channel)
+        return string
 
 
 class Event:
@@ -43,6 +64,7 @@ class Sequence:
         self.beat_time = 60/bpm     # Duration of a whole note (in seconds)
         self.chord_pattern = chord_pattern
         self.events = []
+        self.midi = []
 
     def shift_notes_beat(self, shift):
         '''Shifts notes by a number of beats'''
@@ -112,6 +134,55 @@ class Sequence:
                 #print("note:", ev.midi_note)
                 self.events.append(ev)
 
+    def make_midi(self):
+
+        self.midi = mido.MidiFile()
+        track = mido.MidiTrack()
+        self.midi.tracks.append(track)
+
+        tempo = mido.bpm2tempo(self.bpm)
+
+        # Meta info
+        track.append(mido.MetaMessage('instrument_name', name=self.name))
+        track.append(mido.MetaMessage('set_tempo', tempo = tempo))
+
+        # Append the notes
+        midi_events = []
+        for i in self.events:
+            midi_events.append(MidiMessage(
+                "note_on", 
+                i.midi_note, 
+                i.start, 
+                127,
+                i.channel
+            ))
+
+            midi_events.append(MidiMessage(
+                "note_off",
+                i.midi_note,
+                i.end,
+                127,
+                i.channel
+            ))
+
+        # Sort events
+        midi_events.sort(key = lambda x: x.time)       # Sort by time
+
+        ctime = 0
+
+        for ev in midi_events:
+            delta = ev.time - ctime
+            ctime = ev.time
+            track.append(mido.Message(
+                ev.action, 
+                note=int(ev.note), 
+                velocity=ev.velocity, 
+                time=round(mido.second2tick(delta, self.midi.ticks_per_beat, tempo)), 
+                channel = ev.channel
+                )
+            )
+
+    
 
 
 class ChordPattern:
@@ -235,6 +306,7 @@ class Multitrack:
     def __init__(self, bpm, instruments, chord_pattern, sample_rate):
         self.instruments = instruments      # List of classes
         self.bpm = bpm
+        self.beat_time = 60/bpm
         self.chord_pattern = chord_pattern
 
         self.sequences = []
@@ -273,6 +345,52 @@ class Multitrack:
 
         for seq in self.sequences:
             seq.loop_sequence(n, start_time, end_time)
+
+    def write_note_data1(self):
+        '''Method to write the note to the disk'''
+        for i, seq in enumerate(self.sequences):
+            data_name = "temp/track_"+str(i)+".csv"
+            df = pd.DataFrame(columns=["midi_note", "pitch", "start", "end", "channel", "message"])
+            for ev in seq.events:
+                obj = pd.DataFrame(
+                    [[ev.midi_note, ev.pitch, ev.start, ev.end, ev.channel, ev.message]],
+                    columns=["midi_note", "pitch", "start", "end", "channel", "message"]
+                )
+                df = pd.concat([df, pd.DataFrame(obj)], ignore_index = True)
+            df.to_csv(data_name)
+    
+    def write_note_data(self):
+        '''Method to write the note to the disk'''
+        for i, seq in enumerate(self.sequences):
+            data_name = "temp/track_"+str(i)+".mid"
+            seq.make_midi()
+            seq.midi.save(data_name)
+        
+
+
+
+    def plot_notes(self):
+        '''Method to plot the notes'''
+        file_list = os.listdir("temp")
+
+        plt.plot()
+
+        for file in file_list:
+            if file[-4:] == '.csv':
+                data = pd.read_csv("temp/"+file)
+                
+
+
+
+        plt.show()
+            
+            
+
+
+
+
+            
+
 
 
 

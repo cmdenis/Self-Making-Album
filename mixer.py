@@ -2,7 +2,7 @@ import numpy as np
 import scipy as sci
 from arrangement import make_arrangement
 from signals import Signal 
-from effects import lp_4th_order, custom_norm
+from effects import lp_4th_order, custom_norm, flanger, waveshaper
 import matplotlib.pyplot as plt
 
 
@@ -30,11 +30,16 @@ class MultiSignal():
         # No mixing happening yet here
         for sig in self.signals[0:-1]:
             sig.signal = sig.signal/sig.rms
+        
 
     def get_master(self):
         '''Method to put all the signals in the master signal together.'''
         for sig in self.signals[0:-1]:
             self.signals[-1].signal += sig.signal
+
+        self.signals[-1].signal_side /= np.max(self.signals[-1].signal)
+        self.signals[-1].signal /= np.max(self.signals[-1].signal)
+
 
     def play_sounds(self):
         '''Method to have each sequence play the sounds link to its instrument.'''
@@ -58,11 +63,40 @@ class MultiSignal():
             #plt.plot(self.signals[-1].signal)
             #plt.show()
 
+        if np.random.rand() < 0.1:
+            ws = custom_norm(0, 6, 0.2, 0.2) + np.random.choice([0, 3], p=[0.7, 0.3])
+            print("Using waveshaper with parameter:", ws)
+            waveshaper(self.signals[-1], ws)
+
+        if True:#np.random.rand() < 0.1:
+            delay = int(custom_norm(1, 30, 10, 10))
+            print("Using flanger with delay:", delay, "samples")
+            self.signals[-1].ms_to_stereo()
+            self.signals[-1].sig_l = flanger(self.signals[-1].sig_l, delay)
+            self.signals[-1].sig_r = flanger(self.signals[-1].sig_r, delay + 10)
+            #self.signals[-1].sig_r = np.zeros(len( self.signals[-1].sig_r))
+
+        if False:
+            delay = int(self.seqs.beat_time*44100*np.random.choice(1/8, 1/4, 1/2, 1))
+            times = np.random.choice(1, 2, 3, 4)
+            print("Using ping pong delay:", delay/44100/self.seqs.beat_time)
+
+            self.signals[-1].ms_to_stereo()
+            self.signals[-1].sig_l = np.append(self.signals[-1].sig_l, np.zeros(int((1 + times)*delay)))
+            self.signals[-1].sig_r = np.append(self.signals[-1].sig_l, np.zeros(int((1 + times)*delay)))
+            for i in range(times):
+                0==1
+
+
+        
+
+
+
         print("Normalizing master track signal...")
-        self.signals[-1].signal = self.signals[-1].signal/self.signals[-1].LUFS()
+        self.signals[-1].signal = self.signals[-1].signal/np.max(self.signals[-1].signal)
 
     def save_master(self, mp3 = False):
-        self.signals[-1].save_sound(mp3=mp3)
+        self.signals[-1].save_sound(mp3=mp3, stereo=False)
 
 
 def make_music(seed, sample_rate, filename, mp3 = True):
@@ -72,41 +106,29 @@ def make_music(seed, sample_rate, filename, mp3 = True):
     seqs = make_arrangement()
     max_time = seqs.last_time()
 
-    # Instantiate signal
+    # Store notes to disk
+    seqs.write_note_data()
+
+
+
+    '''# Instantiate signal
+    
     sigs = MultiSignal(seqs, sample_rate, filename+".wav", max_time + 2)
     # Synthesize sound
     sigs.play_sounds()
+    # Get Master track
+    sigs.get_master()
+    # Add master effects
+    #sigs.apply_master_effects()
     # Save sound
-    sigs.save_master(mp3 = False)
+    sigs.save_master(mp3 = False)'''
 
 
 if __name__ == "__main__":
     s = np.random.randint(0, 100000000)
     np.random.seed(s)
-    print("Using Seed:", s, "\n")
-    # Make note data
-    seqs = make_arrangement()
-
-    #for i in seqs.sequences[0].events:
-    #    print(i)
-
-
-    max_time = seqs.last_time()
-
-
-    # Instantiate signal
-    sigs = MultiSignal(seqs, 44100, "audio_tests/output.wav", max_time+2)
-
-
     
-    # Synthesize sound
-    sigs.play_sounds()
-
-    # Add master effects
-    sigs.apply_master_effects()
-
-    # Save sound
-    sigs.save_master(mp3 = False)
+    make_music(s, 44100, "audio_tests/output", mp3=False)
 
 
 

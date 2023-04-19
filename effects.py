@@ -6,9 +6,14 @@ import scipy as sci
 import matplotlib.pyplot as plt
 from notes import *
 
+
 def custom_norm(a, b, mean, sigma):
     '''Function to create a normal distribution with bounds a to b, std sigma and mean'''
     return sci.stats.truncnorm.rvs((a-mean)/sigma, (b-mean)/sigma)*sigma + mean
+
+def flanger(signal, delay):
+    l = len(signal)
+    return (np.append(signal, np.zeros(delay)) + np.append(np.zeros(delay), signal))[:l]
 
 def spectrum(signal, window_func = np.cos):
     '''Function that looks at the frequency spectrum of a signal.'''

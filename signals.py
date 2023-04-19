@@ -17,7 +17,8 @@ class Signal:
         self.duration = int(np.ceil(duration))       # (Seconds)
         self.save_samplerate = save_samplerate  # Sample rate of saved file
 
-        self.signal = np.zeros(samplerate*self.duration) # Signal
+        self.signal = np.zeros(samplerate*self.duration) # Signal (mid part)
+        self.signal_side = np.zeros(samplerate*self.duration) # Signal (side part)
         self.length = self.duration * samplerate
     
     def __add__(self, x):
@@ -25,7 +26,7 @@ class Signal:
         new.signal = self.signal + x.signal
         return new
 
-    def save_sound(self, mp3 = False):
+    def save_sound(self, mp3 = False, stereo = False):
 
 
 
@@ -40,10 +41,16 @@ class Signal:
         #plt.plot(data[0:10])
         #plt.show()
         # Normalizing and Making sure signal has correct amplitude
-        data = np.iinfo(np.int16).max * data / np.max(data) /2
+        data = np.iinfo(np.int16).max * data / np.max(np.abs(data))
+        print(np.max(data))
 
         # Write signal to disk
-        write(self.filename, self.save_samplerate, data.astype(np.int16))
+        if stereo:
+            self.stereo_signal = np.column_stack((self.sig_l, self.sig_r))
+            write(self.filename, self.save_samplerate, self.stereo_signal)
+        else:
+            write(self.filename, self.save_samplerate, data.astype(np.int16))
+        
         if mp3 == True:
             AudioSegment.from_wav(self.filename).export(self.filename[0:-4]+".mp3", format="mp3")
             os.remove(self.filename)
@@ -64,3 +71,9 @@ class Signal:
         sig_filt_fft = sig_fft * filt   # Filtered frequencies
         new = sci.fft.ifft(sig_filt_fft).real  # Inverse fft)
         return np.sqrt(np.sum(new**2)/self.length)
+    
+    def ms_to_stereo(self):
+        self.sig_l = self.signal + self.signal_side
+        self.sig_r = self.signal - self.signal_side
+
+    
