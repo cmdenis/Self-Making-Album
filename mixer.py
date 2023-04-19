@@ -111,7 +111,7 @@ def make_music(seed, sample_rate, filename, mp3 = True):
 
 
 
-    '''# Instantiate signal
+    # Instantiate signal
     
     sigs = MultiSignal(seqs, sample_rate, filename+".wav", max_time + 2)
     # Synthesize sound
@@ -121,7 +121,7 @@ def make_music(seed, sample_rate, filename, mp3 = True):
     # Add master effects
     #sigs.apply_master_effects()
     # Save sound
-    sigs.save_master(mp3 = False)'''
+    sigs.save_master(mp3 = False)
 
 
 if __name__ == "__main__":
