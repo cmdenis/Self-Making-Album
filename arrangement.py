@@ -12,9 +12,9 @@ def make_arrangement():
     root = 0
     instruments = [
         MelodySequence, 
-        ChordSequence, 
-        BassSequence, 
-        DrumSequence
+        #ChordSequence, 
+        #BassSequence, 
+        #DrumSequence
         ]
     bpm = np.random.rand()*100+40
 

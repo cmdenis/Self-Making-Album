@@ -12,33 +12,33 @@ def hard_coded_patterns():
     print("Using Hard coded presets")
     choices = [
         ChordPattern(
-            np.mod(np.array([0, 9, 5, 7]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 9, 5, 7]) + 0*np.random.randint(11), 12),
             np.array([0, 1, 0, 0]),
             np.array([2, 2, 2, 2])
         ),
         ChordPattern(
-            np.mod(np.array([0, 5, 7]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 5, 7]) + 0*np.random.randint(11), 12),
             np.array([0, 0, 0]),
             np.array([4, 4, 8])
         ),
         ChordPattern(
-            np.mod(np.array([0, 5, 7, 2]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 5, 7, 2]) + 0*np.random.randint(11), 12),
             np.array([0, 0, 0, 0]),
             np.array([4, 4, 4, 4])
         ),
 
         ChordPattern(
-            np.mod(np.array([0, 4, 7, 11]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 4, 7, 11]) + 0*np.random.randint(11), 12),
             np.array([0, 1, 0, 1]),
             np.array([4, 4, 4, 4])
         ),
         ChordPattern(
-            np.mod(np.array([0, 10, 5]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 10, 5]) + 0*np.random.randint(11), 12),
             np.array([0, 0, 0]),
             np.array([2, 2, 4])
         ),
         ChordPattern(
-            np.mod(np.array([0, 5, 3, 2]) + np.random.randint(11), 12),
+            np.mod(np.array([0, 5, 3, 2]) + 0*np.random.randint(11), 12),
             np.array([5, 5, 5, 0]),
             np.array([2, 2, 2, 2])
         ),
@@ -73,6 +73,7 @@ def completly_random_patterns():
     print()
     return ChordPattern(roots, chords, lengths)
    
+
 
 
 

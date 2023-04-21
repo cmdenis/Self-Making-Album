@@ -2,7 +2,7 @@ import numpy as np
 import scipy as sci
 from arrangement import make_arrangement
 from signals import Signal 
-from effects import lp_4th_order, custom_norm, flanger, waveshaper
+from effects import lp_4th_order, custom_norm, flanger, waveshaper, brickwall_lp
 import matplotlib.pyplot as plt
 
 
@@ -55,7 +55,7 @@ class MultiSignal():
         #plt.plot(self.signals[-1].signal)
         #plt.show()
         # Sweeping low-pass
-        if np.random.rand() < 0.1:
+        if False:#np.random.rand() < 0.1:
             print("Applying filter sweep")
             cutoff_sweep = np.sin(np.linspace(0, self.duration, self.signals[-1].length)*2*np.pi*(np.random.rand()/3+0.1) )*custom_norm(100, 10000, 2000, 1000) + custom_norm(500, 10000, 4000, 1000)
 
@@ -63,12 +63,12 @@ class MultiSignal():
             #plt.plot(self.signals[-1].signal)
             #plt.show()
 
-        if np.random.rand() < 0.1:
+        if False:#np.random.rand() < 0.1:
             ws = custom_norm(0, 6, 0.2, 0.2) + np.random.choice([0, 3], p=[0.7, 0.3])
             print("Using waveshaper with parameter:", ws)
             waveshaper(self.signals[-1], ws)
 
-        if True:#np.random.rand() < 0.1:
+        if False:#np.random.rand() < 0.1:
             delay = int(custom_norm(1, 30, 10, 10))
             print("Using flanger with delay:", delay, "samples")
             self.signals[-1].ms_to_stereo()
@@ -90,10 +90,12 @@ class MultiSignal():
 
         
 
-
+        print("Applying anti-aliasing filter")
+        signal = brickwall_lp(self.signals[-1].signal, self.sr, 20000)
 
         print("Normalizing master track signal...")
         self.signals[-1].signal = self.signals[-1].signal/np.max(self.signals[-1].signal)
+
 
     def save_master(self, mp3 = False):
         self.signals[-1].save_sound(mp3=mp3, stereo=False)
@@ -118,13 +120,14 @@ def make_music(seed, sample_rate, filename, mp3 = True):
     # Get Master track
     sigs.get_master()
     # Add master effects
-    #sigs.apply_master_effects()
+    sigs.apply_master_effects()
     # Save sound
     sigs.save_master(mp3 = False)
 
 
 if __name__ == "__main__":
     s = np.random.randint(0, 100000000)
+    #np.random.seed(20299812)
     np.random.seed(s)
     
     make_music(s, 44100, "audio_tests/output", mp3=False)

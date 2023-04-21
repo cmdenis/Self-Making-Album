@@ -188,7 +188,7 @@ class Sequence:
 class ChordPattern:
     '''Class for chord pattern object'''
     def __init__(self, roots, chords, lengths):
-
+        
         self.roots = roots      # Array with roots of chords used
         #self.chords = chords    # Array with chords used
         self.chords = []    # Will be filled with all the notes for the chords
@@ -220,7 +220,7 @@ class ChordPattern:
         self.Cmaj9 = np.array([0, 2, 4, 7, 11])     # Xmaj9
         self.C11 = np.array([0, 2, 4, 5, 7, 10])    # X11
         self.Cm11 = np.array([0, 2, 3, 5, 7, 10])   # Xm11
-
+        
         # List of chords
         self.chord_list = [
             self.C, 
@@ -248,6 +248,10 @@ class ChordPattern:
             self.Cm11
         ]
 
+        
+        chord_notes = [np.mod(self.chord_list[j]+i, 12) for (i, j) in zip(self.roots, chords)]
+        print(chord_notes)
+        self.scale = np.unique(np.concatenate(chord_notes))
 
         # Make list of chords containing midi notes
         # Each element of the list contains all the possible notes linked to a chord
@@ -260,6 +264,9 @@ class ChordPattern:
                     np.mod(self.chord_list[i]+j, 12), np.ones(10)
                 ) + np.outer(np.ones(chord_length), np.arange(10))*12
             )))
+
+        
+        
 
     def transpose(self, shift):
         "Transpose chord pattern by amount in semi-tones."
@@ -345,19 +352,6 @@ class Multitrack:
 
         for seq in self.sequences:
             seq.loop_sequence(n, start_time, end_time)
-
-    def write_note_data1(self):
-        '''Method to write the note to the disk'''
-        for i, seq in enumerate(self.sequences):
-            data_name = "temp/track_"+str(i)+".csv"
-            df = pd.DataFrame(columns=["midi_note", "pitch", "start", "end", "channel", "message"])
-            for ev in seq.events:
-                obj = pd.DataFrame(
-                    [[ev.midi_note, ev.pitch, ev.start, ev.end, ev.channel, ev.message]],
-                    columns=["midi_note", "pitch", "start", "end", "channel", "message"]
-                )
-                df = pd.concat([df, pd.DataFrame(obj)], ignore_index = True)
-            df.to_csv(data_name)
     
     def write_note_data(self):
         '''Method to write the note to the disk'''
@@ -366,42 +360,21 @@ class Multitrack:
             seq.make_midi()
             seq.midi.save(data_name)
         
-
-
-
-    def plot_notes(self):
-        '''Method to plot the notes'''
-        file_list = os.listdir("temp")
-
-        plt.plot()
-
-        for file in file_list:
-            if file[-4:] == '.csv':
-                data = pd.read_csv("temp/"+file)
-                
-
-
-
-        plt.show()
             
             
-
-
-
-
-            
-
-
-
 
 
 
 if __name__=="__main__":
 
-    mychords = ChordPattern(
-        [0, 1, 2, 3], 
-        [0, 1, 0, 1],
-        [1, 1, 1, 1]
-    ) 
+    a = ChordPattern(
+        np.array([0, 10, 5]),
+        np.array([0, 0, 0]),
+        np.array([2, 2, 4])
+    )
 
-    print(mychords.chords)
+    print(a.scale)
+
+
+
+    #print(mychords.chords)

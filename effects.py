@@ -59,6 +59,26 @@ def lp_butterworth(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = F
     signal = sci.fft.ifft(sig_filt_fft).real*dry_wet + signal*(1-dry_wet) # Inverse fft
     return signal
 
+def brickwall_lp(signal, samplerate, cutoff, dry_wet = 1, show_plot = False):
+    #print("Applying 'lp_butterworth' filter...")
+    sig_fft = sci.fft.fft(signal)    # FFT of signal
+    sig_freq = sci.fft.fftfreq(len(signal), 1/samplerate)  # Frequencies of fft
+
+
+    sig_fft[sig_freq > cutoff] = 0
+
+    # Plot power spectrum if boolean is true
+    if show_plot:
+        plt.plot(sig_freq, np.abs(sig_fft)**2, label = "Filtered Frequencies")
+        plt.xscale("log")
+        plt.show()
+
+        plt.plot(sci.fft.ifft(sig_fft).real)
+        plt.show()
+
+    signal = sci.fft.ifft(sig_fft).real*dry_wet + signal*(1-dry_wet) # Inverse fft
+    return signal
+
 def ladder_test(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = False):
     #print("Applying 'lp_butterworth' filter...")
 

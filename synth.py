@@ -28,6 +28,10 @@ def ADSR(x, a, d, s, r, show_plot = False):
 
         return np.concatenate((pre_rel, release))
 
+
+
+    
+
 class Synth:
     def __init__(self, bpm, seq, sig) -> None:
         self.bpm = bpm  # BPM
@@ -74,7 +78,6 @@ class SawtoothSynth(Synth):
             buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
             self.sig.signal += np.concatenate((t0, t1, t2, buffer))[:self.sig.sr*self.sig.duration]
-
     
 class SubstractiveSynth1(Synth):
     def __init__(self, bpm, seq, sig) -> None:
@@ -131,9 +134,6 @@ class SubstractiveSynth1(Synth):
             self.sig.signal += np.concatenate((t0, t1, t2, buffer))[:self.sig.sr*self.sig.duration]
         
         self.sig.signal = lp_4th_order(self.sig.signal, self.cutoff, self.resonance, self.sig.length, self.sig.sr)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
-
-
-
 
 class BassSubstractiveSynth1(SubstractiveSynth1):
     def __init__(self, bpm, seq, sig) -> None:
@@ -227,12 +227,16 @@ class ChordSubstractiveSynth1(SubstractiveSynth1):
             print("OSC 2 Detune:", self.pitch_2)
             print("OSC 2 Wave:", self.wave_2)      
 
-
 class MelodySubstractiveSynth1(SubstractiveSynth1):
     def __init__(self, bpm, seq, sig) -> None:
         super().__init__(bpm, seq, sig)   
 
         self.name = "melody_substractive_synth1"
+
+        # Choosing a style of synth
+        style = np.random.choice(
+            [SynthStylePluck()]
+        )
         
         # Synth parameters
         # a, b, mean, sigma
@@ -241,7 +245,7 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         self.amp_A = custom_norm(0, 2, 0.05, 0.1)        # a, b, mean, sigma
         self.amp_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
         self.amp_S = custom_norm(0, 1, 0.8, 0.1)
-        self.amp_R = custom_norm(0, 3, 0.05, 0.2)
+        self.amp_R = custom_norm(0, 3, 0.05, 1)
 
         # Filter
         # Shoudl implement an envelope enventually
@@ -267,4 +271,10 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
             print("OSC 1 Detune:", self.pitch_1)
             print("OSC 1 Wave:", self.wave_1)
             print("OSC 2 Detune:", self.pitch_2)
-            print("OSC 2 Wave:", self.wave_2)      
+            print("OSC 2 Wave:", self.wave_2)   
+
+    def plucky(self):
+        self.amp_A = custom_norm(0, 2, 0.01, 0.05)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0, 3, 0.2, 0.7)   # Should make a correlation with release parameter
+        self.amp_S = 0
+        self.amp_R = self.amp_D
