@@ -9,7 +9,9 @@ class MelodySequence(Sequence):
         super().__init__(bpm, chord_pattern, sr)
         self.name = "melody"
 
-        self.sound = np.random.choice([SineSynth, SawtoothSynth, MelodySubstractiveSynth1], p = [0.10, 0.10, 0.80])
+        #self.sound = np.random.choice([SineSynth, SawtoothSynth, MelodySubstractiveSynth1], p = [0.10, 0.10, 0.80])
+        self.sound = MelodySubstractiveSynth1
+
 
     def arpeggio_melody(self):
         '''Method to make an arpeggio based on the chords used. Will randomly select amongst different arpegiating patterns.'''

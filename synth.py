@@ -3,12 +3,12 @@ import scipy as sci
 from effects import custom_norm, lp_butterworth, lp_4th_order
 import matplotlib.pyplot as plt
 
-def ADSR(x, a, d, s, r, show_plot = False):
+def ADSR(x, a, d, s, r, k = -3, show_plot = False):
     '''Function to generate an ADSR enveloppe on data x'''
     if True: #x[-1] >= (a + d + r): In the future could possibly make this quicker by checking if signal is shorter then a,d,r
-        
-        attack = lambda x: x/a
-        decay = lambda x: (a + d - a*s)/d - x*(1-s)/d
+        val = 1-np.exp(-k)
+        attack = lambda x: (1-np.exp(-k*x/a))/val
+        decay = lambda x: 1 - (1-s)*(np.exp(k*(x-a)/d)-1)/(np.exp(k)-1)
         sustain = lambda x: s
         pre_rel_x = np.append(0, x[x < (x[-1] - r)])    # Appending a 0 in the begining in case the duration is 0
         pre_rel = np.piecewise(
@@ -19,7 +19,8 @@ def ADSR(x, a, d, s, r, show_plot = False):
 
         #print(pre_rel_x)
         
-        release = (x[-1]*pre_rel[-1]/r - pre_rel[-1]/r*x[x[-1] - r <= x])[1:]
+        #release = (x[-1]*pre_rel[-1]/r - pre_rel[-1]/r*x[x[-1] - r <= x])[1:]
+        release = (pre_rel[-1]*(1 - (np.exp(k*(x[x[-1] - r <= x]-x[-1]+r)/(r+0.000001))-1)/(np.exp(k)-1)))[1:]
         
 
         if show_plot == True:
@@ -92,11 +93,19 @@ class SubstractiveSynth1(Synth):
         self.amp_A = custom_norm(0, 2, 0.05, 0.1)        # a, b, mean, sigma
         self.amp_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
         self.amp_S = custom_norm(0, 1, 0.8, 0.1)
-        self.amp_R = custom_norm(0, 3, 0.05, 0.2)
+        self.amp_R = 1 #custom_norm(0, 3, 0.05, 0.2)
+
+        # Env1 
+        self.env1_A = 0# custom_norm(0, 2, 0.1, 0.1)        # a, b, mean, sigma
+        self.env1_D = 0.8 #custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.env1_S = 0#custom_norm(0, 1, 0.8, 0.1)
+        self.env1_R = 0.8# custom_norm(0, 3, 0.05, 0.2)
+
+        self.env1_filt_amt = 100
 
         # Filter
         # Should implement an envelope enventually
-        self.cutoff = custom_norm(300, 20000, 10000, 10000)
+        self.cutoff = 40# custom_norm(300, 20000, 10000, 10000)
         self.resonance = custom_norm(0, 1, 0.3, 0.4)
 
         # OSC 1
@@ -115,7 +124,7 @@ class SubstractiveSynth1(Synth):
 
     def play(self):
         print("Using 'substractive_synth_1' generator...")
-
+        count = True
         for ev in self.seq.events:
 
             # Making samples
@@ -125,15 +134,23 @@ class SubstractiveSynth1(Synth):
 
             t1 = self.wave_1(2*np.pi*(ev.pitch*(1 + self.pitch_1)*samples))     # Create waveform 1
             t1 += self.wave_2(2*np.pi*(ev.pitch*(1 + self.pitch_2)*samples))    # Add waveform 2
-            
+
+            filt_env = self.cutoff + self.env1_filt_amt*ADSR(samples, self.env1_A, self.env1_D, self.env1_S, self.env1_R)
+            if count == True:
+                #plt.plot(samples, filt_env)
+                #plt.show()
+                count = False
+
+            t1 = lp_4th_order(t1, filt_env, self.resonance, self.sig.sr)
             t1 = t1*ADSR(samples, self.amp_A, self.amp_D, self.amp_S, self.amp_R)   # Apply envelope
+    
         
             t2 = np.zeros(int((self.sig.duration - ev.end)*self.sig.sr))              # Zeros at the end of sound
             buffer = np.zeros(10)   # Buffer to make all arrays of equal length
 
             self.sig.signal += np.concatenate((t0, t1, t2, buffer))[:self.sig.sr*self.sig.duration]
         
-        self.sig.signal = lp_4th_order(self.sig.signal, self.cutoff, self.resonance, self.sig.length, self.sig.sr)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
+        #self.sig.signal = lp_4th_order(self.sig.signal, self.cutoff, self.resonance, self.sig.sr)      # Add Butterworth LP filter                                 # Apply low-pass butterworth filter
 
 class BassSubstractiveSynth1(SubstractiveSynth1):
     def __init__(self, bpm, seq, sig) -> None:
@@ -232,11 +249,6 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         super().__init__(bpm, seq, sig)   
 
         self.name = "melody_substractive_synth1"
-
-        # Choosing a style of synth
-        style = np.random.choice(
-            [SynthStylePluck()]
-        )
         
         # Synth parameters
         # a, b, mean, sigma
@@ -265,8 +277,19 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         )
         self.pitch_2 = custom_norm(-1, 1, 0, 0.02)*(2**(1/12)-1)
 
+
+        # Choosing a style of synth that will "correct the default parameeters"
+        style = np.random.choice(
+            [
+                self.panw
+            ]
+        )
+
+        style()
+
         if True:
-            print("ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
+            print("Amp ADSR:", self.amp_A, self.amp_D, self.amp_S, self.amp_R)
+            print("Env1 ADSR:", self.env1_A, self.env1_D, self.env1_S, self.env1_R)
             print("Cutoff:", self.cutoff, "Hz")
             print("OSC 1 Detune:", self.pitch_1)
             print("OSC 1 Wave:", self.wave_1)
@@ -274,7 +297,48 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
             print("OSC 2 Wave:", self.wave_2)   
 
     def plucky(self):
-        self.amp_A = custom_norm(0, 2, 0.01, 0.05)        # a, b, mean, sigma
-        self.amp_D = custom_norm(0, 3, 0.2, 0.7)   # Should make a correlation with release parameter
+        self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
         self.amp_S = 0
         self.amp_R = self.amp_D
+
+        self.cutoff = custom_norm(30, 20000, 1000, 4000)
+        self.env1_filt_amt = custom_norm(0, 20000, 1000, 10000)
+
+        # Env1 
+        self.env1_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
+        self.env1_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.env1_S = custom_norm(0, 1, 0.3, 0.1)
+        self.env1_R = self.amp_D
+
+    def pwouet(self):
+        self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.5, 0.5)
+        self.amp_R = custom_norm(0.05, 3, 0.01, 1)
+
+        self.cutoff = custom_norm(20, 20000, 20, 200)
+        self.env1_filt_amt = custom_norm(1000, 20000, 2000, 10000)
+        self.resonance = custom_norm(0, 1, 0.3, 0.5)
+
+        # Env1 
+        self.env1_A = custom_norm(0.1, 2, 0.1, 0.15)        # a, b, mean, sigma
+        self.env1_D = custom_norm(0, 3, 0.2, 0.1)   # Should make a correlation with release parameter
+        self.env1_S = custom_norm(0, 1, 0.5, 0.5)
+        self.env1_R = self.env1_D
+
+    def panw(self):
+        self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.5, 0.5)
+        self.amp_R = custom_norm(0.05, 3, 0.01, 0.05)
+
+        self.cutoff = custom_norm(20, 20000, 20, 200)
+        self.env1_filt_amt = custom_norm(1000, 20000, 2000, 10000)
+        self.resonance = custom_norm(0, 1, 0.3, 0.5)
+
+        # Env1 
+        self.env1_A = custom_norm(0, 1, 0.001, 0.05)        # a, b, mean, sigma
+        self.env1_D = custom_norm(0, 3, 0.25, 0.05)  
+        self.amp_S = custom_norm(0, 1, 0.8, 0.1) 
+        self.env1_R = custom_norm(0, 3, 0.2, 0.1)

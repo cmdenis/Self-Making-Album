@@ -85,7 +85,7 @@ def ladder_test(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = Fals
     sig = signal.signal()
 
     # Plot power spectrum if boolean is true
-    if show_plot:
+    '''if show_plot:
         plt.plot(sig_freq, np.abs(sig_fft)**2, label = "Unfiltered Frequencies")
         plt.plot(sig_freq, np.abs(sig_filt_fft)**2, label = "Filtered Frequencies")
         plt.plot(sig_freq, filt, label = "Filter")
@@ -93,13 +93,15 @@ def ladder_test(signal, samplerate, cutoff, order, dry_wet = 1, show_plot = Fals
         plt.show()
 
         plt.plot(sci.fft.ifft(sig_filt_fft).real)
-        plt.show()
+        plt.show()'''
 
     return signal
 
-def lp_4th_order(sig, cutoff, res, length, sr):
+def lp_4th_order(sig, cutoff, res, sr, length = None):
     '''Function that applies a 4th order lowpass filter on a signal.
     Cutoff can be a 1D array of the same size as the signal.'''
+    if length == None:
+        length = len(sig)
 
     samples = np.empty(length) 
 

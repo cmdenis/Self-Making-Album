@@ -127,7 +127,7 @@ def make_music(seed, sample_rate, filename, mp3 = True):
 
 if __name__ == "__main__":
     s = np.random.randint(0, 100000000)
-    #np.random.seed(20299812)
+    #np.random.seed(46522484)
     np.random.seed(s)
     
     make_music(s, 44100, "audio_tests/output", mp3=False)

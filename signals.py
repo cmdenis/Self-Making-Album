@@ -42,7 +42,7 @@ class Signal:
         #plt.show()
         # Normalizing and Making sure signal has correct amplitude
         data = np.iinfo(np.int16).max * data / np.max(np.abs(data))
-        print(np.max(data))
+    
 
         # Write signal to disk
         if stereo:
