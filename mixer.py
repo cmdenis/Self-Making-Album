@@ -55,7 +55,7 @@ class MultiSignal():
         #plt.plot(self.signals[-1].signal)
         #plt.show()
         # Sweeping low-pass
-        if False:#np.random.rand() < 0.1:
+        if False:#np.random.rand() < 0.2:
             print("Applying filter sweep")
             cutoff_sweep = np.sin(np.linspace(0, self.duration, self.signals[-1].length)*2*np.pi*(np.random.rand()/3+0.1) )*custom_norm(100, 10000, 2000, 1000) + custom_norm(500, 10000, 4000, 1000)
 
@@ -63,8 +63,8 @@ class MultiSignal():
             #plt.plot(self.signals[-1].signal)
             #plt.show()
 
-        if False:#np.random.rand() < 0.1:
-            ws = custom_norm(0, 6, 0.2, 0.2) + np.random.choice([0, 3], p=[0.7, 0.3])
+        if np.random.rand() < 0.5:
+            ws = custom_norm(0, 6, 0.2, 0.2) + np.random.choice([0, 6, 10], p=[0.2, 0.5, 0.3])
             print("Using waveshaper with parameter:", ws)
             waveshaper(self.signals[-1], ws)
 

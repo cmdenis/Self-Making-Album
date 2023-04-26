@@ -47,7 +47,7 @@ class BassSequence(Sequence):
     def octave_bass(self):
         '''Function to make a pattern of held down bass line'''
 
-        print("╠ Using 'hold_bass'...")
+        print("╠ Using 'octave_bass'...")
 
         # First octave shift randomly all root notes for the bass line
         note_selection = self.chord_pattern.roots
@@ -94,7 +94,7 @@ class BassSequence(Sequence):
         print("╠═══════════════════════╝")
 
         # Choose which chord making procedure to make
-        method = np.random.choice([self.octave_bass])
+        method = np.random.choice([self.octave_bass, self.hold_bass])
 
         method()
 

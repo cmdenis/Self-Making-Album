@@ -250,7 +250,7 @@ class ChordPattern:
 
         
         chord_notes = [np.mod(self.chord_list[j]+i, 12) for (i, j) in zip(self.roots, chords)]
-        print(chord_notes)
+        #print(chord_notes)
         self.scale = np.unique(np.concatenate(chord_notes))
 
         # Make list of chords containing midi notes

@@ -10,12 +10,36 @@ def make_arrangement():
     # In the future, I hope to add more parameters, 
     # and to be able to cut down entries and make more than one pattern and that sort of thing.
     root = 0
-    instruments = [
-        MelodySequence, 
-        #ChordSequence, 
-        #BassSequence, 
-        #DrumSequence
+    #instruments = [DrumSequence, BassSequence, MelodySequence, ChordSequence]
+    instruments = []
+    orch = [
+            [DrumSequence, BassSequence, MelodySequence, ChordSequence],
+            [DrumSequence, DrumSequence, MelodySequence, ChordSequence], 
+            [DrumSequence, DrumSequence, MelodySequence],
+            [DrumSequence, DrumSequence, BassSequence, MelodySequence, ChordSequence],
+            [BassSequence, MelodySequence, ChordSequence]
         ]
+    instruments = orch[np.random.choice([0, 1, 2, 3, 4])]
+    
+
+    '''# Deciding how many drums:
+    for i in range(np.random.choice([0, 1, 2, 3], p = [0.22, 0.75, 0.02, 0.01])):
+        instruments.append(DrumSequence)
+
+    # Deciding how many chord makers
+    for i in range(np.random.choice([0, 1, 2, 3], p = [0.22, 0.75, 0.02, 0.01])):
+        instruments.append(ChordSequence)
+
+    # Deciding how many basses
+    for i in range(np.random.choice([0, 1, 2, 3], p = [0.06, 0.91, 0.02, 0.01])):
+        instruments.append(BassSequence)
+
+    # Deciding how many melodies
+    for i in range(np.random.choice([0, 1, 2, 3], p = [0.1, 0.87, 0.02, 0.01])):
+        instruments.append(MelodySequence)'''
+
+
+
     bpm = np.random.rand()*100+40
 
     seqs = make_pattern(bpm, root, instruments, 44100)
