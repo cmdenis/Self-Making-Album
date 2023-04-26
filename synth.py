@@ -281,7 +281,10 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         # Choosing a style of synth that will "correct the default parameeters"
         style = np.random.choice(
             [
-                self.panw
+                #self.panw,
+                #self.plucky,
+                self.hold,
+                #self.smooth
             ]
         )
 
@@ -297,6 +300,7 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
             print("OSC 2 Wave:", self.wave_2)   
 
     def plucky(self):
+        print("Using synth preset: 'plucky'")
         self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
         self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
         self.amp_S = 0
@@ -312,6 +316,7 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         self.env1_R = self.amp_D
 
     def pwouet(self):
+        print("Using synth preset: 'pwouet'")
         self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
         self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
         self.amp_S = custom_norm(0, 1, 0.5, 0.5)
@@ -328,6 +333,7 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         self.env1_R = self.env1_D
 
     def panw(self):
+        print("Using synth preset: 'panw'")
         self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
         self.amp_D = custom_norm(0.05, 3, 0.3, 1)   # Should make a correlation with release parameter
         self.amp_S = custom_norm(0, 1, 0.5, 0.5)
@@ -340,5 +346,39 @@ class MelodySubstractiveSynth1(SubstractiveSynth1):
         # Env1 
         self.env1_A = custom_norm(0, 1, 0.001, 0.05)        # a, b, mean, sigma
         self.env1_D = custom_norm(0, 3, 0.25, 0.05)  
-        self.amp_S = custom_norm(0, 1, 0.8, 0.1) 
+        self.env1_S = custom_norm(0, 1, 0.8, 0.1) 
         self.env1_R = custom_norm(0, 3, 0.2, 0.1)
+
+    def hold(self):
+        print("Using synth preset: 'hold'")
+        self.amp_A = custom_norm(0, 2, 0.001, 0.001)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0.05, 3, 0.3, 1)           # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 1, 0.1)
+        self.amp_R = custom_norm(0.05, 3, 0.01, 0.05)
+
+        self.cutoff = custom_norm(20, 20000, 20, 200)
+        self.env1_filt_amt = custom_norm(1000, 20000, 200, 8000)
+        self.resonance = custom_norm(0, 1, 0.3, 0.5)
+
+        # Env1 
+        self.env1_A = custom_norm(0, 1, 0.001, 0.01)        # a, b, mean, sigma
+        self.env1_D = custom_norm(0, 3, 0.25, 0.05)  
+        self.env1_S = custom_norm(0, 1, 1, 0.1) 
+        self.env1_R = custom_norm(0, 3, 0.05, 0.01)
+
+    def smooth(self):
+        print("Using synth preset: 'smooth'")
+        self.amp_A = custom_norm(0, 2, 0.1, 0.1)        # a, b, mean, sigma
+        self.amp_D = custom_norm(0.05, 3, 0.3, 1)           # Should make a correlation with release parameter
+        self.amp_S = custom_norm(0, 1, 0.9, 0.1)
+        self.amp_R = custom_norm(0.05, 3, 0.5, 0.05)
+
+        self.cutoff = custom_norm(20, 20000, 300, 5000)
+        self.env1_filt_amt = custom_norm(0, 20000, 2000, 5000)
+        self.resonance = custom_norm(0, 1, 0.3, 0.5)
+
+        # Env1 
+        self.env1_A = custom_norm(0, 1, 0.1, 0.05)        # a, b, mean, sigma
+        self.env1_D = custom_norm(0, 3, 0.25, 0.05)  
+        self.env1_S = custom_norm(0, 1, 0.9, 0.1) 
+        self.env1_R = custom_norm(0, 3, 0.5, 0.1)
