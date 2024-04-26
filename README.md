@@ -16,8 +16,6 @@ The idea here is to make a bunch of interelated scripts which will generate a mu
 
 If everything goes well, the script should be able to produce a complete album that is at least interesting to listen to. Using some random parameters, I think it'd be cool if you could generate basically a entirely new album everytime you run the script. 
 
-I haven't decided yet if I'll build the system with a central seed so as to be able to reproduce an album. 
-
 
 ## Audio Examples
 
